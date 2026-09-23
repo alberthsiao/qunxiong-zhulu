@@ -36,8 +36,8 @@ function initMap(B){
  B.gates={};[L.gate,...ring2.filter(p=>hdist(p,L.gate)===2)].forEach(g=>{const k=hk(...g);T[k]=B.wall>0?'gate':'breach';B.gates[k]=Math.round(B.wall);});
  const spawnA=L.spawn;spawnA.forEach(p=>{T[hk(...p)]='plain';nbrs(...p).forEach(q=>{if(T[hk(...q)]==='mount')T[hk(...q)]='hill';});});
  bl(B,`攻方自${L.n}面逼近${B.city}`);
- if(B.naval)navalMap(B,L);
  B.T=T;B.core=core;
+ if(B.naval)navalMap(B,L);
  B.units.filter(u=>u.side==='a').forEach((u,i)=>u.pos=spawnA[i]);
  const inside=[core,...ring1.sort((a,b)=>hdist(a,L.gate)-hdist(b,L.gate))];
  B.units.filter(u=>u.side==='d').forEach((u,i)=>u.pos=inside[i]);

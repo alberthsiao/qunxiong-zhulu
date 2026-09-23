@@ -55,6 +55,12 @@ src/
     32-relations.js     義兄弟、親族、仇敵、婚姻
     33-mobile.js        地圖縮放與拖曳
     34-extras.js        每月大事摘要、成就、音效
+    35-learn.js         年表、史料原文、地理、隨堂測驗
+    36-naval.js         水戰
+    37-ai2.js           電腦策略層：合縱、守勢、集中兵力
+    38-succession.js    繼承事件、多人熱座
+    39-visual.js        大地圖美術、戰場天候動畫、背景音樂
+    40-tutorial.js      新手引導
     99-boot.js          啟動，必須最後載入
 build.mjs               合併腳本
 tests/sim.cjs           無頭模擬測試

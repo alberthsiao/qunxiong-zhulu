@@ -143,6 +143,17 @@ const html=fs.readFileSync(require('path').join(__dirname,'../dist/index.html'),
    lm.fac='liubei';lm.loy=90;monthlyRelations();ok(lm.loy<=65,'同營仇敵忠誠封頂，實際 '+lm.loy);ok(bondBonus(S.officers.find(o=>o.name==='張飛'),'liubei')===0.3,'羈絆登用加成');}
   {try{localStorage.removeItem('qunxiong-ach');}catch(e){}unlockAch('first_win');ok(achGet().first_win&&!achGet().legend,'成就解鎖');ok((()=>{try{sfx('win');sfx('attack');return true;}catch(e){return false;}})(),'音效不拋錯');
    S.stats={};stat('exec');stat('exec');ok(S.stats.exec===2,'統計');S.evq=[];log('測試攻陷之一','good');log('測試攻陷之二','bad');monthlySummary(dateStr());ok(S.evq.length===1&&/本月大事/.test(S.evq[0].title),'每月摘要');S.evq=[];}
+  // 十三、年表、測驗、地理、水戰、AI 策略、繼承、熱座、音樂、引導
+  {ok(TIMELINE.length>=30&&TIMELINE.every(r=>r[0]&&r[1]&&r[2]),'年表資料');ok(Object.keys(GEO).length===CITY_DATA.length&&CITY_DATA.every(c=>GEO[c[0]]),'每座城都有地理說明');ok(Object.keys(QUOTES).length>=40,'史料原文');
+   ok(QUIZ.every(q=>q[1].length===4&&q[2]>=0&&q[2]<4)&&QUIZ.filter(q=>q[3]).every(q=>HIST.some(h=>h.id===q[3])||['sunce','lianhuan','sangu','chibi'].includes(q[3])),'題庫對應事件');
+   S.evDone={wuchao:1};ok(quizPool().length>=QUIZ.filter(q=>!q[3]).length+2,'題庫依事件開放');S.evq=[];quizEvent('wuchao');ok(S.evq.length===1&&S.evq[0].choices.length===4,'事件問答');S.evq=[];
+   ok(isNaval('柴桑','建業')&&!isNaval('許昌','宛'),'水路判定');const src=S.cities['柴桑'],t=S.cities['建業'];src.owner='sun';t.owner='cao';src.troops=30000;const offs=officersIn('柴桑','sun').slice(0,2)||[];
+   if(offs.length){const B=setupBattle('sun',src,t,offs,8000);ok(B.naval===true,'水戰旗標');initMap(B);const water=Object.values(B.T).filter(x=>x==='river').length;ok(water>MW*MH*0.5,'水戰地圖大半是水面 '+water);ok(navalCost(B,'river')===1&&navalDef(B,'river')===1,'船行水上');ok(navalMod({naval:true,src:'薊',f:'yuan'},{side:'a'},{side:'d'},'charge')===0.8&&navalMod({naval:true,src:'柴桑',f:'sun'},{side:'a'},{side:'d'},'charge')===1,'北方兵暈船');B.over=true;finishBattle(B);}
+   ok(typeof hegemon()!=='undefined'&&aiStrategyMod('yuan',{name:'鄴',troops:50000},S.cities['濮陽'])>0,'AI 策略修正');
+   const F=S.factions.cao;const c1=S.officers.find(o=>o.name==='曹丕'),c2=S.officers.find(o=>o.name==='曹植');if(c1&&c2){c1.fac='cao';c2.fac='cao';c1.city=lordOf('cao').city;c2.city=c1.city;S.evq=[];succession(F,[c1,c2]);ok(S.evq.length===1&&S.evq[0].choices.length>=2,'玩家繼承人選擇');S.evq=[];}
+   S.hot=['cao','yuan'];S.hotDone={};ok(isHuman('yuan')&&!isHuman('sun'),'熱座人類判定');const p0=S.player;const r=hotEndTurn();ok(r===true&&S.player==='yuan'&&S.hotDone.cao===true,'熱座換人');closeModal();S.player=p0;S.hot=null;S.hotDone={};
+   ok(typeof musicTick==='function'&&TUT.length>=5&&TUT.every(x=>typeof x.when==='function'),'音樂與引導定義');try{localStorage.setItem('qunxiong-tut','{}');}catch(e){}S.turn=0;ui.sel=null;tutRender();ok(!!document.querySelector('#tut')&&!document.querySelector('#tut').hidden,'引導應顯示');tutSkip();ok(document.querySelector('#tut').hidden,'跳過後隱藏');
+   ok(typeof reportBug==='function'&&REPO_URL.includes('github.com')&&VERSION,'回報與版本');}
   ok(traitText('shixie').length===2&&isOuter('wa')&&!isOuter('cao'),'特性文字');
   return res.join('\\n');
  })()`);

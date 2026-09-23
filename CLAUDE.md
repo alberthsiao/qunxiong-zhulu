@@ -108,8 +108,30 @@
 ## 其他（`34-extras.js`）
 - `PREF` 讀寫 localStorage 設定（`sfx`、`summary`、`ach`）。每月摘要 `monthlySummary(上月日期)` 在 `endTurn` 推到事件佇列最前。成就 `ACH`／`unlockAch`／`checkAch`（每月與關鍵時點）；統計用 `stat(k)` 累加到 `S.stats`。音效 `sfx(name)` 以 Web Audio 合成，掛在 `playEv`、事件、月末、勝負。設定區塊 `settingsHTML()` 放在存讀檔視窗。
 
+## 學習功能（`35-learn.js`）
+- `TIMELINE`（年表，可附 `S.evDone` 旗標與分歧檢查函式）、`QUOTES`（陳壽評語等原文，附在人物誌）、`GEO`（每座城的今地與地理背景，城池面板顯示；新增城池必須補上，測試會檢查）、`QUIZ`（題目：`[問題,選項×4,答案索引,事件id]`；有事件 id 的題目在該事件觸發後才開放，`runHistory` 與 `13-events` 觸發事件後會用 `quizEvent(id)` 出題）。工具列「年表」。
+
+## 水戰（`36-naval.js`）
+- `NAVAL_EDGES` 列出走水路的道路；`setupBattle` 設 `B.naval`。`initMap` 在 `B.T` 建好後呼叫 `navalMap` 把大半地形改成水面（`river`，此時移動成本 1、防禦 1，由 `navalCost`／`navalDef` 覆寫）。`navalMod`（北方攻方 −20%、計略 +30%）與 `shipMod`（樓船齊射 +15%）已併入 `fmod`；`shipMv`（艨艟 +1）併入 `umv`。水面上有部隊時可放火，燒一日、傷害高。
+
+## 電腦策略層（`37-ai2.js`）
+- `hegemon()`（城數佔 35% 以上）、`threatened(c,f)`、`aiStrategyMod`（併入出兵評估：受威脅不出兵、對霸主 ×1.3、霸主自身 ×0.85）、`aiCoalition`（`aiDiplomacy` 開頭：非霸主電腦互相結盟並約定共攻霸主）、`aiConcentrate`（出兵前從後方調兵）。城數 8 以上每月最多出兵三路。
+
+## 繼承與熱座（`38-succession.js`）
+- `checkFactions` 選出繼承候選後呼叫 `succession(F,cands)`：人類玩家用事件選繼承人（另立他人 40% 分裂），電腦 4 城以上 25% 分裂；`splitOff` 用 `newFaction` 建 `父id_武將id` 的新勢力。
+- 熱座：`S.hot`（人類勢力清單）、`S.player`（現在操作者）、`isHuman(f)`。`endTurn` 先走 `hotEndTurn`：未下完令就 `hotSwitch` 換人；全部下完才讓電腦行動、逐一讓各玩家守城（`S.incoming` 依目標篩選）、再 `advanceMonth`。AI 迴圈與來襲判定都改用 `isHuman`。開局畫面勾「多人熱座」後點選 2～4 個勢力。
+
+## 表現（`39-visual.js`）、引導（`40-tutorial.js`）
+- `mapArtUnder()`（勢力範圍色塊 `.terr`、山脈 `MTN`、長城）畫在城池之下；`sealSize` 依 `CITY_DATA` 規模。`wxLayer(B)` 在戰場加雨雪動畫層（純 CSS）；`.ov.fire` 有閃爍動畫。背景音樂 `MUSIC`／`musicStart`／`musicStop`，設定 `music` 預設關；戰鬥中 `MUSIC.battle=true` 節奏加快。
+- 新手引導 `TUT`：每個步驟有 `when()`，`render()` 尾端 `tutRender()` 顯示第一個未看過且條件成立的步驟；已看過的記在 localStorage `qunxiong-tut`。
+
+## 開源與回饋
+- GitHub：https://github.com/alberthsiao/qunxiong-zhulu （公開）。`.github/workflows/ci.yml` 在推送時跑 `npm run sim`。`VERSION`、`REPO_URL` 在 `01-core.js`；設定區「回報問題」用 `reportBug()` 開預填的 issue。改版時更新 `VERSION`，並 `git commit`＋`git push`。
+- 排行榜（帳號版）：`cloudScore` 在天下大勢結算時寫 `scores/<uid>_<scn>`，`openLeaderboard` 讀前 20 名並用 `user.profiles` 顯示名字（只存 uid）。
+
 ## 已知可改進處
 - 玩家身為盟友時不會自動派援軍（不擅自動用玩家兵力）；目前只有電腦勢力會馳援，包含馳援玩家。
+- 熱座模式下事件（`pushEvent`）以觸發當下的 `S.player` 判定對象，其他玩家不會收到。
 - 電腦勢力不會用火計以外的技能策略（技能是被動生效）；歷史事件只到 263 年，之後沒有西晉滅吳的事件。
 - 軍備不能買賣、不能在出征視窗手動指定攜帶量；電腦評估出兵勝算時不考慮雙方軍備。
 - 天氣沒有戰場視覺特效（雨絲、雪花），只有文字標示；電腦出兵時不會因天候改期。
