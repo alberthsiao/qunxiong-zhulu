@@ -1,0 +1,14 @@
+{
+  "name": "qunxiong-zhulu",
+  "version": "0.1.0",
+  "private": true,
+  "description": "群雄逐鹿：光榮式三國策略遊戲原型",
+  "scripts": {
+    "build": "node build.mjs",
+    "sim": "node build.mjs && node tests/sim.cjs && node tests/battle.cjs && node tests/cloud.cjs && node tests/autosim.cjs",
+    "deploy": "node build.mjs && rm -rf deploy && mkdir -p deploy/qunxiong-zhulu && cp dist/index.html deploy/qunxiong-zhulu/index.html && vercel deploy deploy/qunxiong-zhulu --prod --yes"
+  },
+  "devDependencies": {
+    "jsdom": "^24.0.0"
+  }
+}

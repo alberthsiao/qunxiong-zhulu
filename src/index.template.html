@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>群雄逐鹿</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;900&display=swap" rel="stylesheet">
+<style>
+/*__CSS__*/
+</style>
+</head>
+<body>
+<header class="top">
+  <span class="brand">群雄逐鹿</span>
+  <span class="date" id="t-date"></span>
+  <span id="t-fac"></span>
+  <span class="res" id="t-res"></span>
+  <span class="spacer"></span>
+  <span class="btns">
+    <button id="b-sim">自動模擬</button>
+    <button id="b-roster">人才</button>
+    <button id="b-items">寶物</button>
+    <button id="b-dip">外交</button>
+    <button id="b-pol">政策</button>
+    <button id="b-tl">年表</button>
+    <button id="b-ach">成就</button>
+    <button id="b-edit">修改數值</button>
+    <button id="b-save">存讀檔</button>
+    <button id="b-new">重新開始</button>
+    <button id="b-end" class="primary">結束本月</button>
+  </span>
+</header>
+<main>
+  <div class="mapwrap">
+    <svg id="map" viewBox="0 0 1180 800" role="img" aria-label="三國與周邊諸國地圖"></svg>
+    <div class="legend" id="legend"></div>
+  </div>
+  <aside>
+    <div id="panel"></div>
+    <div id="log" aria-live="polite"></div>
+  </aside>
+</main>
+
+<div class="overlay" id="modal" hidden><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="m-title"><h2 id="m-title"></h2><div id="m-body"></div><div class="acts" id="m-actions"></div></div></div>
+<div class="overlay" id="start" hidden><div class="dlg" role="dialog" aria-modal="true"><h1 class="start-title">群雄逐鹿</h1><p id="st-intro"></p><div class="fgrid" id="fgrid"></div><div class="acts"><button id="b-cont" hidden>讀取存檔</button></div></div></div>
+<div class="overlay" id="battle" hidden><div class="bf" id="bt-body" role="dialog" aria-modal="true" aria-label="戰場"></div></div>
+<div class="overlay" id="duel" hidden><div class="duelbox" id="duel-body" role="dialog" aria-modal="true" aria-label="單挑"></div></div>
+<div id="toast"></div>
+
+<script>
+/*__JS__*/
+</script>
+</body>
+</html>
