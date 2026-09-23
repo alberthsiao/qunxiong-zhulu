@@ -1,7 +1,7 @@
 // 把 src/ 下的樣式與各模組合併成單一 HTML：dist/index.html
 import {readFileSync,writeFileSync,readdirSync,mkdirSync} from 'node:fs';
 const js=readdirSync('src/js').filter(f=>f.endsWith('.js')).sort().map(f=>readFileSync('src/js/'+f,'utf8')).join('\n');
-const css=readFileSync('src/styles.css','utf8');
+const css=readFileSync('src/styles.css','utf8')+'\n'+readFileSync('src/theme.css','utf8');
 const html=readFileSync('src/index.template.html','utf8').replace('/*__CSS__*/',()=>css).replace('/*__JS__*/',()=>js);
 mkdirSync('dist',{recursive:true});writeFileSync('dist/index.html',html);
 // Artifact 版：發布時平台會自行包上 doctype／html／head／body，所以只輸出 head 內容與 body 內容

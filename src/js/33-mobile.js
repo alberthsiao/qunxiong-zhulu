@@ -26,3 +26,11 @@ document.addEventListener('pointermove',e=>{
 function zoomEnd(e){if(!ZOOM.pts.has(e.pointerId))return;ZOOM.pts.delete(e.pointerId);if(ZOOM.pts.size<2)ZOOM.pinch=null;if(ZOOM.pts.size===0){if(ZOOM.drag&&ZOOM.drag.moved)ZOOM.suppress=true;ZOOM.drag=null;}}
 document.addEventListener('pointerup',zoomEnd);document.addEventListener('pointercancel',zoomEnd);
 document.addEventListener('click',e=>{if(ZOOM.suppress){ZOOM.suppress=false;if(zoomTarget(e)){e.stopPropagation();e.preventDefault();}}},true);
+/* 頂欄選單群組：點開關、點選項或點外面即關 */
+document.addEventListener('click',e=>{
+ const t=e.target.closest('.menu .mtoggle');
+ document.querySelectorAll('.menu.open').forEach(m=>{if(!t||m!==t.parentElement){m.classList.remove('open');m.querySelector('.mtoggle').setAttribute('aria-expanded','false');}});
+ if(t){const m=t.parentElement;const on=m.classList.toggle('open');t.setAttribute('aria-expanded',on?'true':'false');return;}
+ if(e.target.closest('.menu .mlist button')){const m=e.target.closest('.menu');m.classList.remove('open');m.querySelector('.mtoggle').setAttribute('aria-expanded','false');}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.menu.open').forEach(m=>{m.classList.remove('open');m.querySelector('.mtoggle').setAttribute('aria-expanded','false');});});

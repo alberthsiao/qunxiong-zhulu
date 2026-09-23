@@ -19,7 +19,8 @@ npm run sim          # 建置後以「全部委任」模擬各劇本三年，再
 ```
 src/
   index.template.html   HTML 骨架（/*__CSS__*/、/*__JS__*/ 兩個佔位符）
-  styles.css            全部樣式（含深色模式變數）
+  styles.css            版面樣式（含深色模式變數）
+  theme.css             視覺主題：宣紙、墨線、朱印
   js/                   依檔名順序串接成同一個 <script>
     01-core.js          資料：城池、道路、武將主檔、寶物、劇本、共用工具、initState
     02-commands.js      內政命令（開發、徵兵、搜索、登用、賑濟）

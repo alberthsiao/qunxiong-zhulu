@@ -20,7 +20,7 @@ function drawStart(){
   const go=$('#st-go');if(go)go.onclick=()=>{const picks=HOT.picks.slice();newGame(picks[0],sc.id);S.hot=picks;S.hotDone={};log(`多人熱座：${picks.map(f=>S.factions[f].name).join('、')}輪流操作`);render();};
   $('#st-back').onclick=()=>{START.scn=null;drawStart();};
  }
- const first=$('#fgrid button');first&&first.focus();
+ const first=$("#fgrid button");first&&first.focus();
 }
 function newGame(f,scn){
  S=initState(f,scn);ui={sel:null,mode:null,src:null};
