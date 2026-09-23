@@ -153,7 +153,7 @@ const OUTER={
  qiang:{troops:11000,train:85,lord:{all:'徹里吉'},diff:'難',cities:['西平'],officers:'西平=徹里吉,雅丹,越吉,迷當,餓何,燒戈'},
  nanman:{troops:10000,lord:{all:'孟獲'},diff:'中',cities:['建寧','雲南'],officers:'建寧=孟獲,祝融,孟優,帶來洞主,沙摩柯,雍闓|雲南=朵思大王,兀突骨,木鹿大王,高定'},
  shixie:{lord:{all:'士燮'},diff:'難',cities:['交趾','番禺'],officers:'交趾=士燮,士壹,士徽,士匡,桓鄰|番禺=士武,甘醴'}};
-const OUTER_DIP={s200:[['yuan','wuhuan','ally',70],['cao','gsdu','truce:12',55]],s208:[['cao','gsdu','truce:12',60],['sun','shixie','',60]],s219:[['sun','shixie','ally',70],['cao','gsdu','truce:12',55],['cao','xianbei','',30]]};
+const OUTER_DIP={s200:[['yuan','wuhuan','ally',70],['cao','gsdu','truce:12',55],['sun','shixie','truce:36',60]],s208:[['cao','gsdu','truce:12',60],['sun','shixie','truce:36',60]],s219:[['sun','shixie','ally',70],['cao','gsdu','truce:12',55],['cao','xianbei','',30]]};
 /* until：該勢力被曹操平定的年份，之後的劇本其城池歸曹操。只派任該劇本年份已登場、未過世的武將 */
 function withOuter(sc){
  const row=n=>OFF.find(o=>o[0]===n);
@@ -172,8 +172,8 @@ const SCENARIOS=[
  {id:'s190',year:190,month:1,title:'反董卓聯軍',desc:'初平元年，董卓挾天子、焚洛陽。關東諸侯推袁紹為盟主起兵討伐，群雄各懷心思。',
   factions:[['dong','董卓','難度 易'],['yuan','袁紹','易'],['cao','曹操','中'],['sun','孫堅','中'],['liubei','劉備','難'],['gongsun','公孫瓚','中'],['yuanshu','袁術','中'],['liubiao','劉表','中'],['liuzhang','劉焉','易'],['mateng','馬騰','中'],['taoqian','陶謙','難'],['kongrong','孔融','難'],['hanfu','韓馥','難'],['wanglang','王朗','難']],
   cities:{洛陽:'dong',長安:'dong',晉陽:'dong',南皮:'yuan',鄴:'hanfu',薊:'gongsun',平原:'liubei',北海:'kongrong',陳留:'cao',下邳:'taoqian',宛:'yuanshu',長沙:'sun',襄陽:'liubiao',江陵:'liubiao',江夏:'liubiao',成都:'liuzhang',江州:'liuzhang',梓潼:'liuzhang',漢中:'liuzhang',永安:'liuzhang',天水:'mateng',武威:'mateng',會稽:'wanglang'},
-  tweak:st=>{Object.assign(st.cities['平原'],{troops:7000,train:75,gold:500});},
-  dip:(()=>{const c=['yuan','cao','sun','yuanshu','hanfu','kongrong','gongsun','liubei','mateng'],d=[];c.forEach((a,i)=>{c.slice(i+1).forEach(b=>d.push([a,b,'truce:6',60]));d.push([a,'dong','',10]);});return d;})(),
+  tweak:st=>{Object.assign(st.cities['平原'],{troops:7000,train:75,gold:500});Object.assign(st.cities['會稽'],{troops:7000,def:400});Object.assign(st.cities['天水'],{troops:9000,def:400});Object.assign(st.cities['北海'],{troops:8000});Object.assign(st.cities['下邳'],{troops:10000});Object.assign(st.cities['長沙'],{troops:9000,train:75});},
+  dip:(()=>{const c=['yuan','cao','sun','yuanshu','hanfu','kongrong','gongsun','liubei','mateng'],d=[];c.forEach((a,i)=>{c.slice(i+1).forEach(b=>d.push([a,b,'truce:6',60]));d.push([a,'dong','',10]);});d.push(['dong','mateng','truce:24',50]);return d;})(),
   officers:{dong:'洛陽=董卓,呂布,李儒,華雄,張遼,高順,徐榮|長安=李傕,郭汜,賈詡|晉陽=張濟,張繡',yuan:'南皮=袁紹,顏良,文醜,田豐,許攸,逢紀,郭圖',hanfu:'鄴=韓馥,沮授,審配,張郃,麴義,高覽',gongsun:'薊=公孫瓚,趙雲,嚴綱,田楷',liubei:'平原=劉備,關羽,張飛,簡雍',kongrong:'北海=孔融,武安國,孫乾',cao:'陳留=曹操,夏侯惇,夏侯淵,曹仁,曹洪,樂進,李典',taoqian:'下邳=陶謙,糜竺,陳登,臧霸',yuanshu:'宛=袁術,紀靈,張勳,閻象',sun:'長沙=孫堅,孫策,程普,黃蓋,韓當,祖茂',liubiao:'襄陽=劉表,蔡瑁,蒯越,蒯良,伊籍|江陵=文聘,黃忠,劉磐|江夏=黃祖',liuzhang:'成都=劉焉,劉璋,張松|江州=嚴顏,黃權|梓潼=張任,冷苞|漢中=張魯,張衛,閻圃,楊任,楊昂|永安=楊松',mateng:'天水=馬騰,馬超,龐德,馬岱|武威=韓遂,閻行',wanglang:'會稽=王朗,虞翻'}},
  {id:'s200',year:200,month:1,title:'官渡之戰',desc:'建安五年，袁紹與曹操在黃河兩岸對峙，孫策據江東，劉備寄身汝南。',
   factions:[['cao','曹操','易'],['yuan','袁紹','易'],['sun','孫策','中'],['liubei','劉備','難'],['liubiao','劉表','中'],['liuzhang','劉璋','中'],['zhanglu','張魯','難'],['mateng','馬騰','中']],
@@ -217,7 +217,7 @@ const MAPVW=1180,MAPVH=800;
 const LAND_NE='M800,0 L800,40 C830,72 868,98 905,84 C928,108 918,138 938,152 C926,188 942,218 968,238 C990,262 1016,250 1020,220 C1030,180 1022,140 1036,100 C1050,58 1075,28 1085,0 Z';
 const LAND_TW='M976,648 C996,652 1008,688 1002,724 C998,750 988,768 979,762 C966,748 957,702 961,676 C963,660 968,649 976,648 Z';
 const LAND_JP=['M1052,352 C1046,322 1078,298 1112,282 C1140,262 1160,236 1180,226 L1180,286 C1156,312 1130,340 1104,362 C1086,384 1058,380 1052,352 Z','M1028,388 C1040,372 1062,380 1060,400 C1056,422 1030,418 1028,388 Z'];
-const VERSION='1.0.0';
+const VERSION='1.0.1';
 const REPO_URL='https://github.com/alberthsiao/qunxiong-zhulu';
 const KEY='qunxiong-zhulu-save-v1';
 const OKEY='qunxiong-zhulu-overrides-v1';

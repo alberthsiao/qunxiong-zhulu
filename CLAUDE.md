@@ -129,6 +129,11 @@
 - GitHub：https://github.com/alberthsiao/qunxiong-zhulu （公開）。`.github/workflows/ci.yml` 在推送時跑 `npm run sim`。`VERSION`、`REPO_URL` 在 `01-core.js`；設定區「回報問題」用 `reportBug()` 開預填的 issue。改版時更新 `VERSION`，並 `git commit`＋`git push`。
 - 排行榜（帳號版）：`cloudScore` 在天下大勢結算時寫 `scores/<uid>_<scn>`，`openLeaderboard` 讀前 20 名並用 `user.profiles` 顯示名字（只存 uid）。
 
+## 平衡與大量模擬
+- `node tests/stats.cjs <局數> <月數> <worker索引> <worker數>` 用自動模擬引擎跑大量局數（每局約 0.1 秒／月），結果寫到 `deploy/stats-N.json`；`node tests/stats-report.cjs` 彙整（存活率、平均城數、事件觸發率、各劇本剩餘勢力與霸主）。改動 AI、經濟或戰鬥數值後，跑 500 局（六個 worker 並行約 15 分鐘）比對。
+- 2026-09 的基準（500 局、15 年、全委任）：190 年劇本剩餘勢力約 17、最大勢力約 10 城；200 年劇本 11／16；208 年劇本 8／24；赤壁觸發率約 12%。若某次改動讓 190 年劇本剩餘勢力回到 20 以上，代表 AI 又不擴張了。
+- 曾犯的錯：「受威脅不出兵」用相鄰敵城兵力總和判定，結果幾乎每城都受威脅、AI 從此停止擴張。現在只看單一最強鄰敵，且受威脅只是減半而非歸零。
+
 ## 已知可改進處
 - 玩家身為盟友時不會自動派援軍（不擅自動用玩家兵力）；目前只有電腦勢力會馳援，包含馳援玩家。
 - 熱座模式下事件（`pushEvent`）以觸發當下的 `S.player` 判定對象，其他玩家不會收到。

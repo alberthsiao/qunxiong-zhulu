@@ -2,10 +2,11 @@
 /* 霸主：城數佔三成五以上的勢力。其他電腦勢力會互相結盟並以霸主為共同目標 */
 function hegemon(){const tot=Object.keys(S.cities).length;const al=Object.values(S.factions).filter(x=>x.alive);const top=al.sort((a,b)=>citiesOf(b.id).length-citiesOf(a.id).length)[0];return top&&citiesOf(top.id).length/tot>=0.35?top.id:null;}
 /* 城池受威脅：相鄰敵城兵力合計超過本城守軍的 1.2 倍 */
-function threatened(c,f){const enemy=ADJ[c.name].map(n=>S.cities[n]).filter(t=>t.owner&&t.owner!==f&&!friendly(f,t.owner)).reduce((a,t)=>a+t.troops,0);return enemy>c.troops*1.2;}
+/* 只看單一最強的相鄰敵城：其兵力超過本城 1.6 倍才算受威脅（總和會讓幾乎每座城都不敢出兵） */
+function threatened(c,f){const enemy=ADJ[c.name].map(n=>S.cities[n]).filter(t=>t.owner&&t.owner!==f&&!friendly(f,t.owner)).reduce((a,t)=>Math.max(a,t.troops),0);return enemy>c.troops*1.6;}
 /* 出兵評估的策略修正：霸主目標 ×1.3；霸主自身更謹慎 ×0.85；受威脅的城不出兵 */
 function aiStrategyMod(f,c,t){
- if(threatened(c,f))return 0;
+ if(threatened(c,f))return 0.5;
  const h=hegemon();let m=1;
  if(h&&t.owner===h&&f!==h)m*=1.3;
  if(h===f)m*=0.85;

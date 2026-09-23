@@ -65,6 +65,7 @@ src/
 build.mjs               合併腳本
 tests/sim.cjs           無頭模擬測試
 tests/autosim.cjs       自動模擬測試
+tests/stats.cjs         大量模擬統計（平衡用）；tests/stats-report.cjs 彙整
 tests/cloud.cjs         帳號存檔測試（模擬 Artifact 執行環境）
 tests/battle.cjs        戰鬥專項測試（四向布局、盟友援軍、快速結算修正）
 ```
