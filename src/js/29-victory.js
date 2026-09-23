@@ -35,6 +35,6 @@ function checkSettle(){
  const tbl=`<table class="ed sim"><thead><tr><th>勢力</th><th>城</th><th>將</th><th>總分</th><th>評等</th></tr></thead><tbody>${rows.slice(0,8).map(r=>`<tr${r.x.id===S.player?' style="font-weight:700"':''}><td><span class="dot" style="background:${r.x.color}"></span>${r.x.name}${r.x.emperor?'（帝）':''}</td><td class="num">${citiesOf(r.x.id).length}</td><td class="num">${S.officers.filter(o=>o.fac===r.x.id).length}</td><td class="num">${r.s.total}</td><td>${rankOf(r.s)}</td></tr>`).join('')}</tbody></table>`;
  unlockAch('settle'+rk);if(me)cloudScore(me.s,rk);
  modal(`${END_YEAR} 年　天下大勢`,`<p class="evt">歲月流轉，群雄逐鹿三十餘年。${me?`${S.factions[S.player].name}軍名列第 ${pos}，評等 <b>${rk}</b>。${verdict}`:''}</p>${tbl}<p class="hint">評等依版圖比例：六成以上 S、四成 A、二成五 B、一成二 C。總分另計武將、人口、民忠、稱帝與劇本目標。</p>`,
-  [{label:'留在地圖，繼續遊戲',primary:true},...(CLOUD.state==='on'?[{label:'排行榜',fn:()=>{setTimeout(openLeaderboard,0);}}]:[]),{label:'重新開始',fn:showStart}]);
+  [{label:'留在地圖，繼續遊戲',primary:true},{label:'本局列傳',fn:()=>{setTimeout(openBiography,0);}},{label:'戰績卡',fn:()=>{setTimeout(openShareCard,0);}},...(CLOUD.state==='on'?[{label:'排行榜',fn:()=>{setTimeout(openLeaderboard,0);}}]:[]),{label:'重新開始',fn:showStart}]);
  $('#modal .dlg').classList.add('wide');
 }

@@ -154,6 +154,15 @@ const html=fs.readFileSync(require('path').join(__dirname,'../dist/index.html'),
    S.hot=['cao','yuan'];S.hotDone={};ok(isHuman('yuan')&&!isHuman('sun'),'熱座人類判定');const p0=S.player;const r=hotEndTurn();ok(r===true&&S.player==='yuan'&&S.hotDone.cao===true,'熱座換人');closeModal();S.player=p0;S.hot=null;S.hotDone={};
    ok(typeof musicTick==='function'&&TUT.length>=5&&TUT.every(x=>typeof x.when==='function'),'音樂與引導定義');try{localStorage.setItem('qunxiong-tut','{}');}catch(e){}S.turn=0;ui.sel=null;tutRender();ok(!!document.querySelector('#tut')&&!document.querySelector('#tut').hidden,'引導應顯示');tutSkip();ok(document.querySelector('#tut').hidden,'跳過後隱藏');
    ok(typeof reportBug==='function'&&REPO_URL.includes('github.com')&&VERSION,'回報與版本');}
+  // 十四、存檔欄位、自動存檔、回放、列傳、戰績卡、新劇本、周邊寶物與事件、回目
+  {ok(SLOTS.length===8,'八個存檔欄位');try{localStorage.removeItem(slotKey('auto'));}catch(e){}autoSave();ok(!!readSlot('auto'),'自動存檔');
+   ok(typeof lordBiography()==='string'&&/傳|本紀/.test(lordBiography())&&/評曰/.test(lordBiography()),'列傳生成');ok(typeof openShareCard==='function','戰績卡');
+   const src=S.cities['許昌'],t=S.cities['宛'];t.owner='yuan';src.troops=30000;const offs=officersIn('許昌','cao').slice(0,2);const B=setupBattle('cao',src,t,offs,8000);initMap(B);repSnap(B);B.day=2;repSnap(B);ok(B.rep.length===2&&B.rep[0].units.length===B.units.length,'回放快照');B.over=true;finishBattle(B);
+   ['s184','s249','s263'].forEach(id=>{const st=initState(null,id);const sc=SCENARIOS.find(x=>x.id===id);ok(Object.values(st.factions).length>=sc.factions.length&&st.officers.every(o=>!o.fac||o.fac==='gone'||o.fac==='unborn'||o.fac===null||st.factions[o.fac]),id+' 可建立');
+    const dead=st.officers.filter(o=>o.fac&&st.factions[o.fac]&&(o.death<sc.year||o.appear>sc.year));ok(dead.length===0,id+' 不應有已故或未生武將在職：'+dead.map(o=>o.name).slice(0,5).join(' '));
+    ok(Object.values(st.factions).every(f=>st.officers[f.lord]&&st.officers[f.lord].fac===f.id),id+' 君主在位');});
+   ok(ITEMS.some(i=>i[0]==='親魏倭王金印')&&new Set(ITEMS.map(i=>i[0])).size===ITEMS.length,'周邊寶物');ok(new Set(HIST.map(h=>h.id)).size===HIST.length&&HIST.some(h=>h.id==='bailang'),'周邊事件');
+   ok(Object.keys(HUI).length>=35&&Object.keys(QUOTES).length>=70,'回目與史料');ok(BIO['張角']&&BIO['何進'],'新武將人物誌');}
   ok(traitText('shixie').length===2&&isOuter('wa')&&!isOuter('cao'),'特性文字');
   return res.join('\\n');
  })()`);

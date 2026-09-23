@@ -645,7 +645,7 @@ function bioHTML(o){
  const st=`統率 ${o.lea}　武力 ${o.war}　智力 ${o.int}　政治 ${o.pol}　魅力 ${o.cha}`;
  const life=`${o.appear} 年登場${o.death?`　${o.death} 年前後卒`:''}　出身 ${o.home}${F?`　${F.name}軍`:o.fac===null?'　在野':''}`;
  return `<div class="bio"><div class="biohead">${portrait(o,96)}<div><h3>${o.name}</h3><p class="hint">${life}</p><p class="hint">${st}</p></div></div>`+
-  (relationText(o).length?`<p class="hint">${relationText(o).join('　')}${skillText(o)?'　技能・'+skillText(o):''}</p>`:skillText(o)?`<p class="hint">技能・${skillText(o)}</p>`:'')+(b.z?`<p class="evt"><b class="src">志</b>${b.z}</p>`:'')+(b.y?`<p class="evt"><b class="src y">演</b>${b.y}</p>`:'')+(QUOTES[o.name]?`<p class="quote">${QUOTES[o.name]}</p>`:'')+
+  (relationText(o).length?`<p class="hint">${relationText(o).join('　')}${skillText(o)?'　技能・'+skillText(o):''}</p>`:skillText(o)?`<p class="hint">技能・${skillText(o)}</p>`:'')+(b.z?`<p class="evt"><b class="src">志</b>${b.z}</p>`:'')+(b.y?`<p class="evt"><b class="src y">演</b>${b.y}</p>`:'')+(QUOTES[o.name]?`<p class="quote">${QUOTES[o.name]}</p>`:'')+(HUI[o.name]?`<p class="hint">演義回目：${HUI[o.name]}</p>`:'')+
   (!BIO[o.name]?'<p class="hint">這位人物尚未撰寫人物誌，以上為依名單資料生成的簡述。</p>':'<p class="hint">「志」為《三國志》所載史實，「演」為《三國演義》情節。</p>')+`</div>`;
 }
 function openBio(id){const o=S.officers[id];if(!o)return;stat('bioViews');checkAch();modal('人物誌',bioHTML(o),[{label:'關閉',primary:true}]);}

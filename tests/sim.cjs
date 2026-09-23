@@ -10,4 +10,4 @@ async function run(sc,f,months){
  const ev=w.eval("S.log.filter(l=>/孫策出獵|連環計|東南風|三顧|單騎|稱帝/.test(l.m)).map(l=>l.t+l.m.slice(0,12)).join('；')");
  return `${sc}/${f} ${i}月 ${w.eval('eraStr()')}: ${r}\n    ${ev} ${errs.length?'ERR '+errs:''}`;
 }
-(async()=>{for(const [sc,f] of [['s190','liubei'],['s200','cao'],['s208','liubei'],['s219','liubei'],['s200','wa'],['s190','nanman']]){console.log(await run(sc,f,36));}})();
+(async()=>{for(const [sc,f] of [['s190','liubei'],['s200','cao'],['s208','liubei'],['s219','liubei'],['s200','wa'],['s190','nanman'],['s184','han'],['s249','sima'],['s263','liubei']]){console.log(await run(sc,f,36));}})();

@@ -49,7 +49,7 @@ function cloudRedraw(){
  const box=$('#cloud-box');if(box){box.innerHTML=cloudHTML();const n=$('#cloud-name');if(n)n.textContent=CLOUD.name?`：${CLOUD.name}`:'';}
  if(!$('#start').hidden&&!START.scn)$('#b-cont').hidden=!hasAnySave();
 }
-function hasAnySave(){return [1,2,3].some(i=>readSlot(i))||Object.keys(CLOUD.docs).length>0;}
+function hasAnySave(){return SLOTS.some(i=>readSlot(i))||!!readSlot('auto')||Object.keys(CLOUD.docs).length>0;}
 $('#modal').addEventListener('click',e=>{
  const b=e.target.closest('[data-csv],[data-cld],[data-cdel]');if(!b)return;
  if(b.dataset.csv)cloudSave(b.dataset.csv);

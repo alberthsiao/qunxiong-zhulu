@@ -47,7 +47,9 @@ const OFF_RAW=`曹操 96 72 91 94 96 170 220 陳留|荀彧 48 18 95 97 90 180 21
 徹里吉 74 72 50 45 62 170 240 西平|雅丹 60 40 78 70 55 175 240 西平|越吉 70 90 30 20 45 175 235 西平|迷當 72 76 52 44 60 185 250 西平|餓何 64 78 35 25 42 190 247 西平|燒戈 64 76 38 28 42 190 247 西平
 孟獲 82 90 45 40 80 175 245 建寧|祝融 72 88 40 30 72 190 245 建寧|孟優 62 74 40 35 50 180 245 建寧|朵思大王 60 60 76 50 50 180 225 雲南|兀突骨 74 95 15 10 35 180 225 雲南|木鹿大王 70 80 55 30 45 180 225 雲南|帶來洞主 55 66 50 40 45 190 240 建寧|沙摩柯 72 90 25 20 50 185 222 建寧|雍闓 66 64 56 50 48 170 225 建寧|高定 68 72 45 42 50 170 225 雲南
 士燮 66 40 80 90 88 170 226 交趾|士壹 58 50 64 72 66 170 227 交趾|士武 55 58 55 62 58 170 215 番禺|士徽 60 62 50 48 45 190 227 交趾|士匡 50 48 60 66 60 190 235 交趾|桓鄰 56 58 60 62 58 180 226 交趾|甘醴 58 66 45 40 48 185 227 番禺
-衛溫 72 68 62 56 52 200 231 會稽|諸葛直 70 66 64 58 54 200 231 會稽`;
+衛溫 72 68 62 56 52 200 231 會稽|諸葛直 70 66 64 58 54 200 231 會稽|張角 78 56 80 60 96 170 184 鄴 zhangjiao@184|張寶 66 70 74 40 70 170 184 南皮 zhangjiao@184|張梁 70 80 50 35 60 170 184 鄴 zhangjiao@184|波才 70 76 56 40 60 170 184 汝南 bocai@184|張曼成 68 74 50 40 58 170 184 宛 zhangmc@184|程遠志 60 74 35 30 40 170 184 平原 zhangjiao@184
+鄧茂 56 70 30 25 35 170 184 平原 zhangjiao@184|韓忠 62 70 40 35 45 170 184 宛 zhangmc@184|趙弘 60 72 35 30 40 170 184 宛 zhangmc@184|孫仲 58 70 35 30 40 170 184 宛 zhangmc@184|彭脫 60 70 38 30 40 170 184 濮陽 zhangjiao@184|卜巳 62 68 45 40 45 170 184 濮陽 zhangjiao@184
+張牛角 64 76 40 30 50 170 185 鄴 zhangjiao@184|何進 50 40 40 50 60 170 189 洛陽 han@184|丁原 72 74 50 50 62 170 189 晉陽 han@184|皇甫酈 60 60 66 60 56 175 200 天水 han@184|傅燮 74 70 70 72 82 170 187 天水 han@184`;
 /* 擴充名單：《三國志》魏、蜀、吳三書主要列傳人物，加上群雄部屬、名士與少數《演義》名角。
    多一欄「效力」：勢力@起始年，可多段（例：yuan@191,cao@204）；- 表示在野。只能往最後面加，理由同上 */
 const OFF_EXTRA=`曹植 20 25 86 70 80 208 232 許昌 cao@208|曹彰 84 91 40 30 60 207 223 許昌 cao@207|曹叡 70 40 82 80 78 222 239 鄴 cao@222|曹爽 50 45 40 45 50 225 249 洛陽 cao@225|曹髦 50 55 72 66 70 255 260 洛陽 cao@255|曹純 82 76 66 60 66 190 210 陳留 cao@190
@@ -140,28 +142,29 @@ const ITEMS=[
 const ITYPES=['武器','名馬','兵書','寶物'];
 function bonusText(b){return Object.entries(b).map(([k,v])=>`${SN[k]}+${v}`).join(' ');}
 const LOYAL=['關羽','張飛','趙雲','諸葛亮','夏侯惇','夏侯淵','曹仁','曹洪','曹丕','曹真','曹休','典韋','許褚','程普','黃蓋','韓當','周瑜','魯肅','孫策','孫權','馬超','馬岱','龐德','袁譚','袁熙','劉璋','劉琦','劉禪','關平','張遼','姜維','高順','陳宮','糜竺','簡雍','孫乾','太史慈','周泰'];
-const HEIRS={曹操:['曹丕','曹真'],孫堅:['孫策','孫權'],孫策:['孫權'],劉備:['劉禪'],袁紹:['袁譚','袁熙'],劉表:['劉琦'],劉焉:['劉璋'],馬騰:['馬超'],董卓:['李傕','郭汜'],陶謙:['糜竺'],韓遂:['閻行'],故國川王:['山上王'],山上王:['東川王'],公孫度:['公孫康'],公孫康:['公孫恭','公孫淵'],丘力居:['蹋頓','樓班'],蹋頓:['樓班'],步度根:['軻比能'],於夫羅:['呼廚泉'],呼廚泉:['劉豹'],孟獲:['祝融','孟優'],士燮:['士徽','士壹'],卑彌呼:['壹與','難升米'],曹丕:['曹叡','曹植'],曹叡:['曹髦','曹爽'],曹髦:['曹植','司馬昭'],劉禪:['劉諶'],孫權:['孫登','孫亮','孫休'],孫亮:['孫休'],孫休:['孫皓'],劉璋:['劉循'],公孫康:['公孫恭','公孫淵'],軻比能:['泄歸泥','素利'],司馬懿:['司馬師','司馬昭'],司馬師:['司馬昭'],司馬昭:['司馬炎']};
-const FC={lubu:'#6B2E6B',cao:'#3B5BA5',yuan:'#B08A22',sun:'#B8322A',liubei:'#3F8A55',liubiao:'#7E5696',liuzhang:'#C46A22',zhanglu:'#3F7C86',mateng:'#7A4E2D',dong:'#3E3A36',yuanshu:'#A0476E',gongsun:'#6A6FA8',taoqian:'#5E6B2E',kongrong:'#2F5D4F',hanfu:'#8C3B3B',wanglang:'#56657A',wa:'#C2476B',gogu:'#2E7D8C',gsdu:'#54708A',wuhuan:'#8A6D3B',xianbei:'#5F7A3A',xiongnu:'#93502F',qiang:'#7B6A8E',nanman:'#2F7A5A',shixie:'#B5832E'};
+const HEIRS={曹操:['曹丕','曹真'],孫堅:['孫策','孫權'],孫策:['孫權'],劉備:['劉禪'],袁紹:['袁譚','袁熙'],劉表:['劉琦'],劉焉:['劉璋'],馬騰:['馬超'],董卓:['李傕','郭汜'],陶謙:['糜竺'],韓遂:['閻行'],故國川王:['山上王'],山上王:['東川王'],公孫度:['公孫康'],公孫康:['公孫恭','公孫淵'],丘力居:['蹋頓','樓班'],蹋頓:['樓班'],步度根:['軻比能'],於夫羅:['呼廚泉'],呼廚泉:['劉豹'],孟獲:['祝融','孟優'],士燮:['士徽','士壹'],卑彌呼:['壹與','難升米'],張角:['張寶','張梁'],皇甫嵩:['皇甫酈'],曹爽:['夏侯玄','曹髦'],曹丕:['曹叡','曹植'],曹叡:['曹髦','曹爽'],曹髦:['曹植','司馬昭'],劉禪:['劉諶'],孫權:['孫登','孫亮','孫休'],孫亮:['孫休'],孫休:['孫皓'],劉璋:['劉循'],公孫康:['公孫恭','公孫淵'],軻比能:['泄歸泥','素利'],司馬懿:['司馬師','司馬昭'],司馬師:['司馬昭'],司馬昭:['司馬炎']};
+const FC={lubu:'#6B2E6B',cao:'#3B5BA5',yuan:'#B08A22',sun:'#B8322A',liubei:'#3F8A55',liubiao:'#7E5696',liuzhang:'#C46A22',zhanglu:'#3F7C86',mateng:'#7A4E2D',dong:'#3E3A36',yuanshu:'#A0476E',gongsun:'#6A6FA8',taoqian:'#5E6B2E',kongrong:'#2F5D4F',hanfu:'#8C3B3B',wanglang:'#56657A',wa:'#C2476B',gogu:'#2E7D8C',gsdu:'#54708A',wuhuan:'#8A6D3B',xianbei:'#5F7A3A',xiongnu:'#93502F',qiang:'#7B6A8E',nanman:'#2F7A5A',shixie:'#B5832E',han:'#A64B3C',luzhi:'#4C6B9A',zhangjiao:'#C9A227',bocai:'#B0892A',zhangmc:'#9C7B1F',sima:'#3D3D6B'};
 /* 周邊諸國：倭、高句麗、遼東公孫氏、烏桓、鮮卑、南匈奴、羌、南蠻、交州士氏。各劇本由 withOuter 併入 */
 const OUTER={
- wa:{troops:8000,train:70,lord:{all:'卑彌呼'},diff:'難',cities:['邪馬台'],officers:'邪馬台=卑彌呼,難升米,都市牛利,伊聲耆,掖邪狗,載斯烏越'},
- gogu:{lord:{s190:'故國川王',all:'山上王'},diff:'難',cities:['丸都'],officers:'丸都=故國川王,山上王,發岐,乙巴素,罽須,東川王,密友,紐由'},
- gsdu:{lord:{s208:'公孫康',s219:'公孫康',all:'公孫度'},diff:'中',cities:['襄平','樂浪'],officers:'襄平=公孫度,公孫康,公孫恭,陽儀,柳毅,卑衍|樂浪=楊祚'},
- wuhuan:{troops:11000,train:88,lord:{s190:'丘力居',all:'蹋頓'},diff:'難',cities:['柳城'],until:207,officers:'柳城=丘力居,蹋頓,樓班,蘇僕延,難樓,烏延'},
- xianbei:{troops:12000,train:90,lord:{s190:'步度根',s200:'步度根',all:'軻比能'},diff:'難',cities:['彈汗山'],officers:'彈汗山=步度根,軻比能,扶羅韓,素利,彌加,泄歸泥,鬱築鞬'},
- xiongnu:{troops:11000,train:88,lord:{s190:'於夫羅',all:'呼廚泉'},diff:'難',cities:['平陽'],until:216,officers:'平陽=於夫羅,呼廚泉,劉豹,去卑'},
- qiang:{troops:11000,train:85,lord:{all:'徹里吉'},diff:'難',cities:['西平'],officers:'西平=徹里吉,雅丹,越吉,迷當,餓何,燒戈'},
- nanman:{troops:10000,lord:{all:'孟獲'},diff:'中',cities:['建寧','雲南'],officers:'建寧=孟獲,祝融,孟優,帶來洞主,沙摩柯,雍闓|雲南=朵思大王,兀突骨,木鹿大王,高定'},
- shixie:{lord:{all:'士燮'},diff:'難',cities:['交趾','番禺'],officers:'交趾=士燮,士壹,士徽,士匡,桓鄰|番禺=士武,甘醴'}};
+ wa:{troops:8000,train:70,lord:{s249:'壹與',s263:'壹與',all:'卑彌呼'},diff:'難',cities:['邪馬台'],officers:'邪馬台=卑彌呼,難升米,都市牛利,伊聲耆,掖邪狗,載斯烏越'},
+ gogu:{lord:{s184:'故國川王',s190:'故國川王',s249:'@',s263:'@',all:'山上王'},diff:'難',cities:['丸都'],officers:'丸都=故國川王,山上王,發岐,乙巴素,罽須,東川王,密友,紐由'},
+ gsdu:{until:238,lord:{s208:'公孫康',s219:'公孫康',all:'公孫度'},diff:'中',cities:['襄平','樂浪'],officers:'襄平=公孫度,公孫康,公孫恭,陽儀,柳毅,卑衍|樂浪=楊祚'},
+ wuhuan:{troops:11000,train:88,lord:{s184:'丘力居',s190:'丘力居',all:'蹋頓'},diff:'難',cities:['柳城'],until:207,officers:'柳城=丘力居,蹋頓,樓班,蘇僕延,難樓,烏延'},
+ xianbei:{troops:12000,train:90,lord:{s184:'步度根',s190:'步度根',s200:'步度根',s249:'@',s263:'@',all:'軻比能'},diff:'難',cities:['彈汗山'],officers:'彈汗山=步度根,軻比能,扶羅韓,素利,彌加,泄歸泥,鬱築鞬'},
+ xiongnu:{troops:11000,train:88,lord:{s184:'於夫羅',s190:'於夫羅',all:'呼廚泉'},diff:'難',cities:['平陽'],until:216,officers:'平陽=於夫羅,呼廚泉,劉豹,去卑'},
+ qiang:{troops:11000,train:85,lord:{s249:'迷當',s263:'@',all:'徹里吉'},diff:'難',cities:['西平'],officers:'西平=徹里吉,雅丹,越吉,迷當,餓何,燒戈'},
+ nanman:{troops:10000,lord:{s249:'@',s263:'@',all:'孟獲'},diff:'中',cities:['建寧','雲南'],officers:'建寧=孟獲,祝融,孟優,帶來洞主,沙摩柯,雍闓|雲南=朵思大王,兀突骨,木鹿大王,高定'},
+ shixie:{until:227,to:'sun',lord:{all:'士燮'},diff:'難',cities:['交趾','番禺'],officers:'交趾=士燮,士壹,士徽,士匡,桓鄰|番禺=士武,甘醴'}};
 const OUTER_DIP={s200:[['yuan','wuhuan','ally',70],['cao','gsdu','truce:12',55],['sun','shixie','truce:36',60]],s208:[['cao','gsdu','truce:12',60],['sun','shixie','truce:36',60]],s219:[['sun','shixie','ally',70],['cao','gsdu','truce:12',55],['cao','xianbei','',30]]};
 /* until：該勢力被曹操平定的年份，之後的劇本其城池歸曹操。只派任該劇本年份已登場、未過世的武將 */
 function withOuter(sc){
  const row=n=>OFF.find(o=>o[0]===n);
  for(const[id,o]of Object.entries(OUTER)){
-  if(o.until&&sc.year>=o.until){o.cities.forEach(c=>sc.cities[c]='cao');continue;}
-  const lord=o.lord[sc.id]||o.lord.all;
+  if(o.until&&sc.year>=o.until){const to=o.to||'cao';if(sc.factions.some(f=>f[0]===to))o.cities.forEach(c=>sc.cities[c]=to);continue;}
+  const lord=o.lord[sc.id]||o.lord.all;if(lord==='@'){o.cities.forEach(c=>{if(!sc.cities[c])sc.cities[c]=null;});continue;}
   sc.factions.push([id,lord,o.diff]);o.cities.forEach(c=>sc.cities[c]=id);
   sc.officers[id]=o.officers.split('|').map(part=>{const[c,ns]=part.split('=');const ok=ns.split(',').filter(n=>{const r=row(n);return n===lord||(r[6]<=sc.year&&r[7]>=sc.year);});return ok.length?c+'='+ok.join(','):null;}).filter(Boolean).join('|');
+  if(!new RegExp('[=,]'+lord+'(,|\\||$)').test(sc.officers[id]))sc.officers[id]=(sc.officers[id]?sc.officers[id]+'|':'')+o.cities[0]+'='+lord;
  }
  sc.dip=(sc.dip||[]).concat(OUTER_DIP[sc.id]||[]);
  /* 邊疆民風強悍：周邊勢力的城池開局兵多、訓練度高，免得一開局就被鄰近大勢力吞掉 */
@@ -169,6 +172,13 @@ function withOuter(sc){
  return sc;
 }
 const SCENARIOS=[
+ {id:'s184',year:184,month:2,title:'黃巾之亂',desc:'中平元年，張角以太平道號召數十萬信徒同時起事，「蒼天已死，黃天當立」。朝廷急命皇甫嵩、朱儁、盧植分路討伐，天下自此多事。',
+  factions:[['han','皇甫嵩','易'],['luzhi','盧植','中'],['zhangjiao','張角','中'],['bocai','波才','難'],['zhangmc','張曼成','難'],['dong','董卓','中']],
+  cities:{洛陽:'han',長安:'han',許昌:'han',陳留:'han',晉陽:'han',下邳:'han',壽春:'han',襄陽:'han',江陵:'han',江夏:'han',長沙:'han',成都:'han',梓潼:'han',江州:'han',永安:'han',漢中:'han',吳:'han',會稽:'han',建業:'han',柴桑:'han',北海:'han',薊:'luzhi',鄴:'zhangjiao',南皮:'zhangjiao',平原:'zhangjiao',濮陽:'zhangjiao',汝南:'bocai',宛:'zhangmc',天水:'dong',武威:'dong'},
+  officers:{han:'洛陽=皇甫嵩,朱儁,何進,曹操,袁紹,袁術,王允,蔡邕,皇甫酈|許昌=荀彧,鍾繇|陳留=張邈,典韋,曹仁,夏侯惇,夏侯淵|下邳=陶謙,陳珪|襄陽=劉表,蒯越,蒯良|長沙=孫堅,程普,黃蓋,韓當,祖茂|成都=劉焉,劉璋|晉陽=丁原,呂布,高順|北海=孔融|會稽=王朗|吳=許貢|壽春=陳蘭,雷薄',
+   luzhi:'薊=盧植,劉備,關羽,張飛,公孫瓚,劉虞,嚴綱,田楷',zhangjiao:'鄴=張角,張梁,張牛角|南皮=張寶|平原=程遠志,鄧茂|濮陽=卜巳,彭脫',bocai:'汝南=波才,劉辟,龔都,管亥',zhangmc:'宛=張曼成,韓忠,趙弘,孫仲',dong:'天水=董卓,李儒,華雄,牛輔,董旻,樊稠,徐榮,傅燮|武威=李傕,郭汜,張濟,韓遂,馬騰'},
+  dip:[['han','luzhi','ally',85],['zhangjiao','bocai','ally',80],['zhangjiao','zhangmc','ally',80],['bocai','zhangmc','ally',70],['han','dong','truce:18',40],['luzhi','dong','truce:18',40]],
+  tweak:st=>{['鄴','南皮','平原','濮陽','汝南','宛'].forEach(n=>Object.assign(st.cities[n],{troops:14000,train:45,def:250,ppl:75}));['洛陽','長安','薊'].forEach(n=>Object.assign(st.cities[n],{troops:12000,train:70}));Object.assign(st.cities['天水'],{troops:9000,train:80});}},
  {id:'s190',year:190,month:1,title:'反董卓聯軍',desc:'初平元年，董卓挾天子、焚洛陽。關東諸侯推袁紹為盟主起兵討伐，群雄各懷心思。',
   factions:[['dong','董卓','難度 易'],['yuan','袁紹','易'],['cao','曹操','中'],['sun','孫堅','中'],['liubei','劉備','難'],['gongsun','公孫瓚','中'],['yuanshu','袁術','中'],['liubiao','劉表','中'],['liuzhang','劉焉','易'],['mateng','馬騰','中'],['taoqian','陶謙','難'],['kongrong','孔融','難'],['hanfu','韓馥','難'],['wanglang','王朗','難']],
   cities:{洛陽:'dong',長安:'dong',晉陽:'dong',南皮:'yuan',鄴:'hanfu',薊:'gongsun',平原:'liubei',北海:'kongrong',陳留:'cao',下邳:'taoqian',宛:'yuanshu',長沙:'sun',襄陽:'liubiao',江陵:'liubiao',江夏:'liubiao',成都:'liuzhang',江州:'liuzhang',梓潼:'liuzhang',漢中:'liuzhang',永安:'liuzhang',天水:'mateng',武威:'mateng',會稽:'wanglang'},
@@ -202,7 +212,24 @@ const SCENARIOS=[
   officers:{cao:'漢中=夏侯淵,張郃,郭淮,王平|長安=曹操,曹真,劉曄|襄陽=曹仁,滿寵|宛=于禁,龐德,徐晃|許昌=程昱,王朗,徐庶|鄴=曹丕,司馬懿,夏侯惇,鍾繇,賈詡,閻圃|壽春=張遼,曹休|下邳=臧霸|洛陽=許褚,曹洪|汝南=文聘|武威=閻行',
    liubei:'成都=劉備,諸葛亮,法正,黃權,馬超,黃忠,李嚴,趙雲,糜竺,蔣琬,費禕,馬謖,劉禪|梓潼=張飛,魏延,馬岱|江州=嚴顏,鄧芝|永安=孟達,劉封|江陵=關羽,關平,馬良|長沙=伊籍',
    sun:'建業=孫權,張昭,虞翻,呂範,徐盛,周泰|柴桑=呂蒙,陸遜,甘寧,蔣欽|江夏=韓當,朱然|吳=凌統,丁奉|會稽=潘璋'},
-  dip:[['sun','liubei','ally',35],['cao','liubei','',10],['cao','sun','',40]]}
+  dip:[['sun','liubei','ally',35],['cao','liubei','',10],['cao','sun','',40]]},
+ {id:'s249',year:249,month:1,title:'高平陵之變',desc:'正始十年，曹爽專權，司馬懿稱病蟄伏。蜀漢費禕主政、姜維求戰，孫權晚年二宮之爭方歇。魏國內部的裂痕，即將決定三國的結局。',
+  factions:[['sima','司馬懿','中'],['cao','曹爽','中'],['liubei','劉禪','難'],['sun','孫權','中']],
+  cities:{洛陽:'sima',許昌:'sima',宛:'sima',長安:'sima',天水:'sima',武威:'sima',鄴:'cao',晉陽:'cao',薊:'cao',南皮:'cao',平原:'cao',北海:'cao',濮陽:'cao',陳留:'cao',下邳:'cao',壽春:'cao',汝南:'cao',襄陽:'cao',柳城:'cao',平陽:'cao',成都:'liubei',梓潼:'liubei',江州:'liubei',永安:'liubei',漢中:'liubei',建業:'sun',吳:'sun',會稽:'sun',柴桑:'sun',江夏:'sun',江陵:'sun',長沙:'sun',交趾:'sun',番禺:'sun'},
+  officers:{sima:'洛陽=司馬懿,司馬師,司馬昭,司馬孚,蔣濟,高柔,王肅,鍾會,鍾毓,傅嘏,王基,辛憲英|長安=郭淮,陳泰,鄧艾,司馬望,賈充|天水=胡遵,胡奮,王經|許昌=王昶,州泰,石苞,盧毓|宛=王濬',
+   cao:'鄴=曹爽,何晏,桓範,夏侯玄,夏侯威|壽春=王凌,毌丘儉,諸葛誕,文欽|晉陽=夏侯霸,孫禮|襄陽=王基|薊=張特|下邳=諸葛緒',
+   liubei:'成都=劉禪,費禕,姜維,諸葛瞻,陳祗,黃皓,譙周|漢中=張翼,胡濟|梓潼=廖化,張嶷|江州=馬忠,句扶|永安=羅憲,宗預',
+   sun:'建業=孫權,諸葛恪,孫峻,滕胤,朱據,全琮,呂岱|柴桑=陸抗,朱然,丁奉|江陵=朱績|江夏=朱異|長沙=鍾離牧|吳=陸凱|會稽=留贊'},
+  dip:[['cao','sima','',5],['sun','liubei','ally',60],['cao','liubei','',20],['sima','liubei','',15],['cao','sun','',20],['sima','sun','',20]],
+  tweak:st=>{['洛陽','長安','許昌'].forEach(n=>Object.assign(st.cities[n],{troops:18000,train:88,def:600}));Object.assign(st.cities['鄴'],{troops:16000,train:80});Object.assign(st.cities['成都'],{troops:12000,train:80});Object.assign(st.cities['建業'],{troops:14000,train:80});}},
+ {id:'s263',year:263,month:1,title:'三國歸晉',desc:'景元四年，司馬昭決意伐蜀，鍾會、鄧艾大軍將發。姜維屯田沓中，黃皓弄權成都；吳主孫休倚陸抗鎮守荊州。三國的最後一幕開始了。',
+  factions:[['cao','司馬昭','易'],['liubei','劉禪','難'],['sun','孫休','中']],
+  cities:{薊:'cao',南皮:'cao',鄴:'cao',晉陽:'cao',平原:'cao',北海:'cao',濮陽:'cao',陳留:'cao',許昌:'cao',洛陽:'cao',長安:'cao',下邳:'cao',宛:'cao',汝南:'cao',壽春:'cao',襄陽:'cao',天水:'cao',武威:'cao',柳城:'cao',平陽:'cao',襄平:'cao',樂浪:'cao',成都:'liubei',梓潼:'liubei',江州:'liubei',永安:'liubei',漢中:'liubei',建業:'sun',吳:'sun',會稽:'sun',柴桑:'sun',江夏:'sun',江陵:'sun',長沙:'sun',交趾:'sun',番禺:'sun'},
+  officers:{cao:'洛陽=司馬昭,司馬炎,賈充,裴秀,鍾毓,陳騫,荀顗,王渾,杜預,王濬,張華|長安=鍾會,諸葛緒,胡烈,衛瓘,司馬望|天水=鄧艾,鄧忠,胡奮|襄陽=羊祜|壽春=石苞|晉陽=唐彬|平原=馬隆',
+   liubei:'成都=劉禪,諸葛瞻,諸葛尚,黃皓,譙周,張遵,黃崇,劉諶|漢中=傅僉,蔣舒|梓潼=姜維,廖化,張翼|江州=閻宇|永安=羅憲',
+   sun:'建業=孫休,濮陽興,張布,丁奉,陸凱,孫皓|柴桑=陸抗,吾彥|江陵=朱績,步闡|江夏=丁封|吳=張悌|會稽=沈瑩|長沙=鍾離牧|交趾=陶璜'},
+  dip:[['sun','liubei','ally',50],['cao','liubei','',5],['cao','sun','',20]],
+  tweak:st=>{['洛陽','長安','天水'].forEach(n=>Object.assign(st.cities[n],{troops:20000,train:90}));Object.assign(st.cities['漢中'],{troops:10000,train:80,def:600});Object.assign(st.cities['梓潼'],{troops:12000,train:85});Object.assign(st.cities['建業'],{troops:14000,train:80});}}
 ];
 SCENARIOS.forEach(withOuter);
 
@@ -217,7 +244,7 @@ const MAPVW=1180,MAPVH=800;
 const LAND_NE='M800,0 L800,40 C830,72 868,98 905,84 C928,108 918,138 938,152 C926,188 942,218 968,238 C990,262 1016,250 1020,220 C1030,180 1022,140 1036,100 C1050,58 1075,28 1085,0 Z';
 const LAND_TW='M976,648 C996,652 1008,688 1002,724 C998,750 988,768 979,762 C966,748 957,702 961,676 C963,660 968,649 976,648 Z';
 const LAND_JP=['M1052,352 C1046,322 1078,298 1112,282 C1140,262 1160,236 1180,226 L1180,286 C1156,312 1130,340 1104,362 C1086,384 1058,380 1052,352 Z','M1028,388 C1040,372 1062,380 1060,400 C1056,422 1030,418 1028,388 Z'];
-const VERSION='1.0.1';
+const VERSION='1.1.0';
 const REPO_URL='https://github.com/alberthsiao/qunxiong-zhulu';
 const KEY='qunxiong-zhulu-save-v1';
 const OKEY='qunxiong-zhulu-overrides-v1';
@@ -244,7 +271,7 @@ function initState(pf,scnId){
  sc.factions.forEach(([id,lord,diff])=>st.factions[id]={id,name:lord,color:FC[id],lord:null,alive:true,diff:diff.replace('難度 ','')});
  CITY_DATA.forEach(([n,x,y,_,sz])=>{st.cities[n]=mkCity(n,x,y,sz,sc.cities[n]||null);});
  const asg={};
- Object.entries(sc.officers).forEach(([f,spec])=>spec.split('|').forEach(part=>{const[city,names]=part.split('=');names.split(',').forEach(n=>asg[n]=[f==='free'?null:f==='x'?'gone':f,f==='x'?null:city]);}));
+ Object.entries(sc.officers).forEach(([f,spec])=>spec.split('|').forEach(part=>{if(!part.includes('='))return;const[city,names]=part.split('=');names.split(',').forEach(n=>asg[n]=[f==='free'?null:f==='x'?'gone':f,f==='x'?null:city]);}));
  OFF.forEach(([n,lea,war,int,pol,cha,ap,de,home],i)=>{
   let fac,city;
   if(asg[n])[fac,city]=asg[n];else if(de<sc.year){fac='gone';city=null;}else if(ap>sc.year){fac='unborn';city=null;}else{const af=affOf(i,sc.year);const ac=af&&st.factions[af]?affCity(st,af,i):null;if(ac){fac=af;city=ac;}else{fac=null;city=home;}}
@@ -271,6 +298,6 @@ function fcolor(f){return f?S.factions[f].color:'#8E9088';}
 function freeFound(c){return S.officers.filter(o=>o.fac===null&&o.found&&(o.city===c.name||ADJ[c.name].includes(o.city)));}
 function dateStr(){return `${S.year}年${S.month}月`;}
 function cnNum(n){const d=['','一','二','三','四','五','六','七','八','九'];if(n<=10)return n===10?'十':d[n];if(n<20)return '十'+d[n-10];return d[Math.floor(n/10)]+'十'+d[n%10];}
-function eraStr(){const y=S.year;const e=y<=193?['初平',y-189]:y<=195?['興平',y-193]:y<=220?['建安',y-195]:null;return (e?`${e[0]}${e[1]===1?'元':cnNum(e[1])}年（${y}）`:`${y}年`)+` ${S.month}月`;}
-function log(m,c){S.log.unshift({t:dateStr(),m,c:c||''});if(S.log.length>80)S.log.pop();}
+function eraStr(){const y=S.year;const e=y<=188?['中平',y-183]:y<=193?['初平',y-189]:y<=195?['興平',y-193]:y<=220?['建安',y-195]:null;return (e?`${e[0]}${e[1]===1?'元':cnNum(e[1])}年（${y}）`:`${y}年`)+` ${S.month}月`;}
+function log(m,c){S.log.unshift({t:dateStr(),m,c:c||''});if(S.log.length>80)S.log.pop();chron(m,c);}
 function isFront(c,f){return ADJ[c.name].some(n=>{const o=S.cities[n].owner;return o!==f&&!friendly(f,o);});}

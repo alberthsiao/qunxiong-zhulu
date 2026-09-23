@@ -4,7 +4,7 @@ function readSlot(i){try{let s=localStorage.getItem(slotKey(i));if(!s&&i===1)s=l
 function dumpState(){S.savedAt=new Date().toLocaleString('zh-TW',{hour12:false});return JSON.stringify(S,(k,v)=>k==='evq'?[]:(k==='home'||k==='appear'||k==='death')?undefined:v);}
 function loadState(d){
  if(d.player&&!FC[d.player]){toast('這份存檔扮演的勢力已從遊戲中移除，無法讀取');return;}
- S=d;S.incoming=[];S.items=S.items||[];S.dip=S.dip||{};S.proposals=S.proposals||[];S.intel=S.intel||{};S.evDone=S.evDone||{};S.climate=S.climate||{};S.intro=S.intro||{};S.policy=S.policy||{};S.stats=S.stats||{};if(S.startCities==null)S.startCities=99;S.evq=[];if(!S.goal&&S.player&&S.factions[S.player])S.goal=makeGoal(S.player);
+ S=d;S.incoming=[];S.items=S.items||[];S.dip=S.dip||{};S.proposals=S.proposals||[];S.intel=S.intel||{};S.evDone=S.evDone||{};S.climate=S.climate||{};S.intro=S.intro||{};S.policy=S.policy||{};S.stats=S.stats||{};S.chron=S.chron||[];if(S.startCities==null)S.startCities=99;S.evq=[];if(!S.goal&&S.player&&S.factions[S.player])S.goal=makeGoal(S.player);
  /* 存檔裡若有已從遊戲移除的內容（例如曾短暫加入的夷洲），讀取時清掉，免得找不到道路或武將資料 */
  const known=new Set(CITY_DATA.map(c=>c[0]));
  Object.keys(S.cities).forEach(n=>{if(!known.has(n))delete S.cities[n];});
@@ -26,7 +26,8 @@ function slotLabel(d){if(!d)return '<span class="hint">空</span>';const sc=SCEN
  return `${sc.year} ${sc.title}　${F?F.name+'軍':''}　${d.year}年${d.month}月　<small class="itm">${d.savedAt||''}</small>`;}
 function openSaves(){
  const can=S&&S.player&&!S.over;
- let h=`<table class="ed"><tbody>`+[1,2,3].map(i=>{const d=readSlot(i);return `<tr><td>欄位 ${i}</td><td>${slotLabel(d)}</td><td class="dpacts">${can?`<button data-sv="${i}">存入</button>`:''}${d?`<button data-ld="${i}">讀取</button><button data-del="${i}">刪除</button>`:''}</td></tr>`;}).join('')+`</tbody></table>`;
+ const au=readSlot('auto');
+ let h=`<table class="ed"><tbody><tr><td>自動</td><td>${slotLabel(au)}</td><td class="dpacts">${au?`<button data-ld="auto">讀取</button>`:'<span class="hint">每月結束時自動存檔</span>'}</td></tr>`+SLOTS.map(i=>{const d=readSlot(i);return `<tr><td>欄位 ${i}</td><td>${slotLabel(d)}</td><td class="dpacts">${can?`<button data-sv="${i}">存入</button>`:''}${d?`<button data-ld="${i}">讀取</button><button data-del="${i}">刪除</button>`:''}</td></tr>`;}).join('')+`</tbody></table>`;
  h+=`<div id="cloud-box">${cloudHTML()}</div>`;
  h+=settingsHTML();
  h+=`<h3>匯出與匯入</h3><p class="hint">上方「欄位」的存檔只保存在這台裝置的瀏覽器裡。想換裝置或備份時，可以匯出成一段文字自行保存，再到別處貼上匯入。</p>
@@ -37,7 +38,7 @@ $('#modal').addEventListener('click',e=>{
  const b=e.target.closest('[data-sv],[data-ld],[data-del],#sv-exp,#sv-imp');if(!b)return;
  try{
   if(b.dataset.sv){localStorage.setItem(slotKey(b.dataset.sv),dumpState());toast(`已存入欄位 ${b.dataset.sv}`);openSaves();return;}
-  if(b.dataset.ld){const d=readSlot(+b.dataset.ld);if(d)loadState(d);return;}
+  if(b.dataset.ld){const d=readSlot(b.dataset.ld==='auto'?'auto':+b.dataset.ld);if(d)loadState(d);return;}
   if(b.dataset.del){localStorage.removeItem(slotKey(b.dataset.del));if(b.dataset.del==='1')localStorage.removeItem(KEY);openSaves();return;}
  }catch(err){toast('這個瀏覽器無法存取存檔');return;}
  if(b.id==='sv-exp'){const t=$('#sv-txt');t.value=btoa(unescape(encodeURIComponent(dumpState())));t.select();try{navigator.clipboard.writeText(t.value);toast('已複製到剪貼簿');}catch(e){}return;}

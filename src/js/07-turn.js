@@ -54,7 +54,7 @@ function endTurn(){
   if(checkEnd())return;
   const prevDate=dateStr();
   advanceMonth();
-  monthlySummary(prevDate);checkAch();sfx('month');
+  monthlySummary(prevDate);checkAch();sfx('month');autoSave();
   render();
   showEvents(()=>showProposals(()=>processCaptives(()=>{render();checkSettle();})));
  });
@@ -73,7 +73,7 @@ function runIncoming(done){
 function checkEnd(){
  if(S.over)return true;
  if(!S.factions[S.player].alive&&S.hot&&S.hot.filter(f=>S.factions[f].alive).length){const alive=S.hot.filter(f=>S.factions[f].alive);S.hot=alive.length>1?alive:null;log(`${S.factions[S.player].name}軍已滅亡，退出遊戲`,'bad');hotSwitch(alive[0],'前一位玩家的勢力已滅亡。');return true;}
- if(!S.factions[S.player].alive){S.over=true;render();modal('霸業未竟',endingHTML(false),[{label:'重新開始',primary:true,fn:showStart}]);return true;}
- if(citiesOf(S.player).length===Object.keys(S.cities).length){S.over=true;unlockAch('unify');sfx('win');render();modal('天下一統',endingHTML(true),[{label:'重新開始',primary:true,fn:showStart},{label:'留在地圖'}]);return true;}
+ if(!S.factions[S.player].alive){S.over=true;render();modal('霸業未竟',endingHTML(false),[{label:'重新開始',primary:true,fn:showStart},{label:'本局列傳',fn:()=>{setTimeout(openBiography,0);}}]);return true;}
+ if(citiesOf(S.player).length===Object.keys(S.cities).length){S.over=true;unlockAch('unify');sfx('win');render();modal('天下一統',endingHTML(true),[{label:'重新開始',primary:true,fn:showStart},{label:'本局列傳',fn:()=>{setTimeout(openBiography,0);}},{label:'戰績卡',fn:()=>{setTimeout(openShareCard,0);}},{label:'留在地圖'}]);return true;}
  return false;
 }

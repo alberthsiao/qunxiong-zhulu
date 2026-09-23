@@ -13,7 +13,7 @@ function autoSelect(){const u=alive(BT.B,BT.side).find(x=>!x.done);BT.sel=u?u.id
 async function runDay(){
  const B=BT.B;
  while(!B.over){
-  if(B.phase==null){B.loss={a:0,d:0};bl(B,`第 ${B.day} 日`,'day');newDayWx(B);fireTick(B);if(checkMap(B))break;drawBattle();banner(`第 ${B.day} 日`);await fxWait(800);beginPhase(B,'a');}
+  if(B.phase==null){B.loss={a:0,d:0};bl(B,`第 ${B.day} 日`,'day');newDayWx(B);fireTick(B);repSnap(B);if(checkMap(B))break;drawBattle();banner(`第 ${B.day} 日`);await fxWait(800);beginPhase(B,'a');}
   if(B.phase===BT.side&&!BT.auto){autoSelect();drawBattle();return;}
   await aiPhase(B,B.phase);
   if(B.over)break;
@@ -130,7 +130,7 @@ function drawBattle(){
  h+=`<div class="bgrid"><div class="bmapwrap"><svg id="bmap" viewBox="0 0 ${MAPW} ${MAPH}" role="img" aria-label="戰場地圖">${mapSVG()}</svg>${wxLayer(B)}<div class="fxl" id="fxl"></div></div><div class="bpanel">${panelHTML()}</div></div>`;
  h+=`<div class="tlegend"><span><i class="sw t-plain"></i>平原</span><span><i class="sw t-forest"></i>森林：受傷減輕</span><span><i class="sw t-hill"></i>丘陵：受傷大減，難行</span><span><i class="sw t-river"></i>河川：受傷加重，難行</span><span><i class="sw t-mount"></i>峻嶺：不可通行</span><span><i class="sw t-gate"></i>城門：攻破後可入城</span><span><i class="sw sw-fire"></i>火計：三格內放火，森林延燒，雨天不可</span><span>伏兵：林中無敵相鄰的部隊，敵方看不見</span></div>`;
  if(B.over){const pw=(side==='a')===B.win;h+=`<p class="result ${pw?'good':'bad'}">${pw?'我軍勝利':'我軍敗北'}：${B.win?`${fname(B.f)}攻陷${B.city}`:`${B.city}守住了`}</p>`;}
- h+=`<div class="bacts"><button id="bt-fx">動畫：${FXN[FX.mode]}</button>`+(B.over?`<button id="bt-end" class="primary">結束戰鬥</button>`:
+ h+=`<div class="bacts"><button id="bt-fx">動畫：${FXN[FX.mode]}</button>`+(B.over?`${B.rep&&B.rep.length&&BT.rep==null?'<button id="bt-replay">戰報回放</button>':''}<button id="bt-end" class="primary">結束戰鬥</button>`:
   (BT.busy?`<button id="bt-skip">略過動畫</button>`:'')+`${side==='a'?'<button id="bt-retreat">撤退</button>':''}<button id="bt-auto">委任</button><button id="bt-endphase" class="primary" ${B.phase===side&&!BT.busy?'':'disabled'}>結束本日行動</button>`)+`</div>`;
  h+=`<div class="blog">`+B.log.slice().reverse().slice(0,60).map(l=>`<p class="${l.c}">${l.m}</p>`).join('')+`</div>`;
  $('#bt-body').innerHTML=h;zoomApply('bmap');

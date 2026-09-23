@@ -39,7 +39,7 @@ function openTimeline(){
  const D=S.evDone||{};
  const rows=TIMELINE.map(([y,t,z,k,div])=>{const done=k&&D[k];const past=y<=S.year;let d=null;try{d=div?div():null;}catch(e){}
   return `<tr class="${past?'':'future'}"><td class="num">${y}</td><td><b>${t}</b>${done?' <span class="tag">本局已發生</span>':k&&past?' <span class="tag off">本局未發生</span>':''}${d?`<br><small class="bad">分歧：${d}</small>`:''}<br><small>${z}</small></td></tr>`;}).join('');
- modal('三國大事年表',`<p class="hint">現在是 ${S.year} 年。灰色為尚未到來的年份；「本局已發生」表示本局觸發了對應事件，「分歧」表示你這一局已與史實不同。</p><div class="edlist"><table class="ed tl"><tbody>${rows}</tbody></table></div>`,[{label:'隨堂測驗',fn:()=>{setTimeout(()=>openQuiz(),0);}},{label:'關閉',primary:true}]);
+ modal('三國大事年表',`<p class="hint">現在是 ${S.year} 年。灰色為尚未到來的年份；「本局已發生」表示本局觸發了對應事件，「分歧」表示你這一局已與史實不同。</p><div class="edlist"><table class="ed tl"><tbody>${rows}</tbody></table></div>`,[{label:'隨堂測驗',fn:()=>{setTimeout(()=>openQuiz(),0);}},{label:'本局列傳',fn:()=>{setTimeout(openBiography,0);}},{label:'關閉',primary:true}]);
  $('#modal .dlg').classList.add('wide');
 }
 /* 史料原文：陳壽評語與裴注，附在人物誌 */
