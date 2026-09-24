@@ -356,6 +356,78 @@ svg#bmap{border:1px solid var(--ink);border-radius:2px;background:var(--paper)}
 @media(max-width:900px){.start-title{font-size:40px}.start-title::after{right:-34px;width:30px;height:30px;font-size:11px}}
 @media(max-width:900px){header.top{padding:6px 12px;gap:4px 10px}.res{font-size:13px;gap:2px 8px}.res span{padding-left:8px}#t-fac,.date{font-size:13px}.brand{font-size:13px;padding:2px 8px}}
 
+/* ===== 華麗層：漆紅、金泥、雲紋轉角 ===== */
+:root{--lac:#5B1A12;--lac2:#2B0F0B;--gold:#B8912F;--gold-hi:#E9CD7A;--gold-lo:#7D5E1A;--ivory:#F3E9CF;
+ --corner:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><g fill='none' stroke='%23C9A54A' stroke-width='1.6' stroke-linecap='round'><path d='M2 38V10q0-8 8-8h28'/><path d='M8 38V14q0-4 4-4h26'/><path d='M14 10c-3 0-5 2-5 5 0 2 1.5 3.5 3.5 3.5 1.5 0 2.5-1 2.5-2.5 0-1-.8-1.8-1.8-1.8'/><path d='M10 14c0-3 2-5 5-5'/><circle cx='4' cy='4' r='1.6' fill='%23C9A54A' stroke='none'/></g></svg>");
+ --divider:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='10' viewBox='0 0 48 10'><path d='M0 5h12M36 5h12' stroke='%23C9A54A' stroke-width='1'/><path d='M14 5c2-4 6-4 8 0s6 4 8 0 6-4 8 0' fill='none' stroke='%23C9A54A' stroke-width='1.2'/><circle cx='24' cy='5' r='1.4' fill='%23C9A54A'/></svg>");
+ --compass:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g fill='none' stroke='%23B8912F' stroke-width='1.2'><circle cx='50' cy='50' r='44'/><circle cx='50' cy='50' r='36' stroke-dasharray='2 3'/><circle cx='50' cy='50' r='6'/></g><g fill='%23B8912F'><path d='M50 8l6 38-6 6-6-6z' opacity='.9'/><path d='M50 92l6-38-6-6-6 6z' opacity='.45'/><path d='M8 50l38-6 6 6-6 6z' opacity='.45'/><path d='M92 50l-38-6-6 6 6 6z' opacity='.45'/></g><text x='50' y='7' font-size='9' text-anchor='middle' fill='%23B8912F' font-family='serif'>北</text></svg>")}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--gold:#D2AB4A;--gold-hi:#F1DA95;--gold-lo:#8A6A24;--ivory:#EFE4C8;--lac:#4A140E;--lac2:#1C0906}}
+:root[data-theme="dark"]{--gold:#D2AB4A;--gold-hi:#F1DA95;--gold-lo:#8A6A24;--ivory:#EFE4C8;--lac:#4A140E;--lac2:#1C0906}
+/* 頂欄：漆帶、金線 */
+header.top{background:linear-gradient(180deg,var(--lac) 0%,var(--lac2) 100%);color:var(--ivory);box-shadow:0 1px 0 var(--gold),0 3px 0 var(--lac2),0 4px 0 var(--gold-lo),0 8px 18px rgba(0,0,0,.3);padding:9px 18px}
+header.top::before{content:'';position:absolute;left:0;right:0;top:3px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-hi) 20%,var(--gold-hi) 80%,transparent);opacity:.7}
+.brand{background:linear-gradient(180deg,#C9412F,#8E2A22);box-shadow:inset 0 0 0 1.5px var(--gold-hi),0 0 0 1px var(--gold-lo),0 2px 6px rgba(0,0,0,.5);color:var(--ivory)}
+.date{color:var(--gold-hi);text-shadow:0 1px 2px rgba(0,0,0,.5)}
+#t-fac{color:var(--ivory)}
+.res{color:rgba(243,233,207,.75)}.res b{color:var(--ivory)}.res span{border-left-color:rgba(233,205,122,.3)}
+header.top button{border-color:var(--gold);color:var(--ivory);background:rgba(0,0,0,.2)}
+header.top button:not(:disabled):hover,header.top .menu.open .mtoggle{background:var(--gold);color:var(--lac2);border-color:var(--gold-hi)}
+header.top button.primary{background:linear-gradient(180deg,#D24A3E,#8E2A22);border-color:var(--gold-hi);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 2px 6px rgba(0,0,0,.5)}
+header.top button.primary:not(:disabled):hover{background:linear-gradient(180deg,#E25A4C,#A83228);color:#fff}
+.menu .mlist{background:var(--lac2);border:1px solid var(--gold);box-shadow:inset 0 0 0 1px rgba(233,205,122,.25),var(--shadow)}
+.menu .mlist button{color:var(--ivory);border-color:transparent}.menu .mlist button:hover{background:var(--gold);color:var(--lac2)}
+/* 金框：視窗、地圖、側欄面板、戰場面板 */
+.dlg,.bpanel,#tut{border:1px solid var(--gold-lo);box-shadow:var(--shadow),inset 0 0 0 3px var(--panel),inset 0 0 0 4px var(--gold),inset 0 0 0 5px var(--panel),inset 0 0 0 6px rgba(184,145,47,.35);position:relative}
+.dlg::before,.dlg::after{content:'';position:absolute;width:40px;height:40px;background:var(--corner) no-repeat;background-size:contain;pointer-events:none;opacity:.9}
+.dlg::before{left:7px;top:7px}.dlg::after{right:7px;bottom:7px;transform:rotate(180deg)}
+.dlg h2{padding-left:0;text-align:center;font-size:26px;letter-spacing:.2em;background:linear-gradient(180deg,var(--gold-hi),var(--gold) 55%,var(--gold-lo));-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 1px 0 rgba(0,0,0,.25))}
+.dlg h2::before{display:none}
+.dlg h2::after{background:var(--divider) center/48px 10px repeat-x;height:10px;margin:8px 0 0;opacity:.9}
+#panel h2{background:linear-gradient(180deg,var(--gold-hi),var(--gold) 55%,var(--gold-lo));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 0 rgba(0,0,0,.2))}
+#panel .phead{border-bottom:2px solid var(--gold)}#panel .phead::after{background:var(--gold-lo);opacity:.6}
+h3{padding-left:16px}h3::before{width:9px;height:9px;top:.45em;transform:rotate(45deg);background:linear-gradient(135deg,var(--gold-hi),var(--gold-lo));border-radius:0}
+.statgrid div>*:last-child{color:var(--verm-ink)}
+svg#map{border:1px solid var(--gold-lo);box-shadow:inset 0 0 0 4px var(--paper),inset 0 0 0 5px var(--gold),inset 0 0 0 7px var(--paper),inset 0 0 0 8px rgba(184,145,47,.4),0 0 0 1px rgba(0,0,0,.15)}
+.mapwrap::after{content:'';position:absolute;left:26px;bottom:74px;width:92px;height:92px;background:var(--compass) no-repeat center/contain;opacity:.8;pointer-events:none}
+.city.sel .seal-r{stroke:var(--gold-hi);stroke-width:3.5;filter:drop-shadow(0 0 4px var(--gold))}
+.ring{stroke:var(--gold)}
+.terr{opacity:.2}
+.legend{border-top:1px solid var(--gold-lo)}
+/* 按鈕 */
+button.primary{background:linear-gradient(180deg,#C9412F,#8E2A22);border-color:var(--gold);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 1px 3px rgba(0,0,0,.3)}
+button.primary:not(:disabled):hover{background:linear-gradient(180deg,#D9503E,#A83228);border-color:var(--gold-hi)}
+.cmds button.primary{background:linear-gradient(180deg,#C9412F,#8E2A22)}
+.acts{border-top:1px solid var(--gold-lo)}
+/* 開局畫面 */
+.start-title{font-size:64px;letter-spacing:.32em;background:linear-gradient(180deg,var(--gold-hi) 0%,var(--gold) 50%,var(--gold-lo) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 0 rgba(0,0,0,.25)) drop-shadow(0 6px 12px rgba(0,0,0,.2))}
+.start-title::after{background:linear-gradient(180deg,#D24A3E,#8E2A22);box-shadow:inset 0 0 0 1.5px var(--gold-hi),0 2px 6px rgba(0,0,0,.4);right:-46px}
+.scard,.fcard{box-shadow:0 1px 0 var(--line),inset 0 0 0 1px rgba(184,145,47,.25)}
+.scard:hover,.fcard:hover{border-color:var(--gold);box-shadow:var(--shadow),inset 0 0 0 1px var(--gold)}
+.scard .syear{background:linear-gradient(180deg,#D24A3E,#8E2A22);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 0 rgba(0,0,0,.2))}
+.fcard.picked{border-color:var(--gold);box-shadow:inset 0 0 0 2px var(--gold)}
+/* 戰場 */
+.bhd{background:linear-gradient(180deg,var(--lac),var(--lac2));color:var(--ivory);border-bottom:2px solid var(--gold)}
+.bhd h2{background:linear-gradient(180deg,var(--gold-hi),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;padding-left:0}.bhd h2::before{display:none}
+.bhd .hint,.bhd span,.bhd small{color:rgba(243,233,207,.8)}.bhd .wx b{color:var(--gold-hi)}
+.morale small{font-weight:600}
+.mbar{border:1px solid var(--gold-lo);background:var(--paper-deep)}.mbar i{box-shadow:inset 0 -2px 0 rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.35)}
+svg#bmap{border:1px solid var(--gold-lo);box-shadow:inset 0 0 0 3px var(--paper),inset 0 0 0 4px var(--gold)}
+.tok.sel .tb{stroke:var(--gold-hi);stroke-width:3;filter:drop-shadow(0 0 5px var(--gold))}
+.result{border-top:2px solid var(--gold);border-bottom:2px solid var(--gold);background:var(--divider) center top/48px 10px repeat-x,var(--divider) center bottom/48px 10px repeat-x;background-color:transparent;padding:14px 0}
+.result.good{color:var(--verm-ink)}
+/* 人物誌、單挑、提示 */
+.bio .biohead{border-bottom:2px solid var(--gold)}
+.dseal{box-shadow:0 0 0 2px var(--gold),0 0 0 4px var(--panel),var(--shadow)}
+#toast{background:linear-gradient(180deg,var(--lac),var(--lac2));color:var(--gold-hi);border:1px solid var(--gold)}
+.tag{background:linear-gradient(180deg,#C9412F,#8E2A22)}
+.ach.on{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold-hi)}.ach.on b{color:var(--verm-ink)}
+.pol.on{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+#log{border-top:2px solid var(--gold-lo)}#log time{color:var(--gold-lo)}
+/* 表格標頭金線 */
+table.offs th,table.ed th{border-bottom:1px solid var(--gold-lo)}
+@media(max-width:900px){.mapwrap::after{width:56px;height:56px;left:14px;bottom:62px}.start-title{font-size:44px}}
+@media (prefers-reduced-motion:reduce){button{transition:none}}
+
 </style>
 
 <header class="top">
@@ -635,7 +707,7 @@ const MAPVW=1180,MAPVH=800;
 const LAND_NE='M800,0 L800,40 C830,72 868,98 905,84 C928,108 918,138 938,152 C926,188 942,218 968,238 C990,262 1016,250 1020,220 C1030,180 1022,140 1036,100 C1050,58 1075,28 1085,0 Z';
 const LAND_TW='M976,648 C996,652 1008,688 1002,724 C998,750 988,768 979,762 C966,748 957,702 961,676 C963,660 968,649 976,648 Z';
 const LAND_JP=['M1052,352 C1046,322 1078,298 1112,282 C1140,262 1160,236 1180,226 L1180,286 C1156,312 1130,340 1104,362 C1086,384 1058,380 1052,352 Z','M1028,388 C1040,372 1062,380 1060,400 C1056,422 1030,418 1028,388 Z'];
-const VERSION='1.1.1';
+const VERSION='1.1.2';
 const REPO_URL='https://github.com/alberthsiao/qunxiong-zhulu';
 const KEY='qunxiong-zhulu-save-v1';
 const OKEY='qunxiong-zhulu-overrides-v1';

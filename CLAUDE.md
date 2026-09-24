@@ -147,6 +147,7 @@
 
 ## 視覺主題（`src/theme.css`）
 - 主題層疊在 `styles.css` 之後（`build.mjs` 串接兩個檔），方向是「宣紙、墨線、朱印」：`--verm` 朱紅為唯一強調色（主要按鈕、選取、標題側標、印章）、`--noise` 是內嵌 SVG 的紙紋、`--paper-deep` 用於日誌與戰報底。深色模式在 `theme.css` 開頭另定義這幾個 token。改外觀請改 `theme.css`，`styles.css` 只管版面。
+- `theme.css` 後半是「華麗層」（漆紅 `--lac`、金泥 `--gold`／`--gold-hi`／`--gold-lo`、象牙 `--ivory`，雲紋轉角 `--corner`、卷草分隔 `--divider`、羅盤 `--compass` 都是內嵌 SVG data URI）。金色標題用 `background-clip:text`。要回到素雅版，把華麗層整段刪掉即可，前半自成一套。
 - 頂欄按鈕收成三組選單（`.menu` ＋ `.mtoggle` ＋ `.mlist`，開關邏輯在 `33-mobile.js` 尾端），按鈕 id 不變，其他程式碼照舊用 id 綁事件。新增功能按鈕請放進對應選單（內政／史冊／系統），不要再加到頂欄。
 
 ## 已知可改進處
