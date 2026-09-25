@@ -713,7 +713,7 @@ const MAPVW=1180,MAPVH=800;
 const LAND_NE='M800,0 L800,40 C830,72 868,98 905,84 C928,108 918,138 938,152 C926,188 942,218 968,238 C990,262 1016,250 1020,220 C1030,180 1022,140 1036,100 C1050,58 1075,28 1085,0 Z';
 const LAND_TW='M976,648 C996,652 1008,688 1002,724 C998,750 988,768 979,762 C966,748 957,702 961,676 C963,660 968,649 976,648 Z';
 const LAND_JP=['M1052,352 C1046,322 1078,298 1112,282 C1140,262 1160,236 1180,226 L1180,286 C1156,312 1130,340 1104,362 C1086,384 1058,380 1052,352 Z','M1028,388 C1040,372 1062,380 1060,400 C1056,422 1030,418 1028,388 Z'];
-const VERSION='1.1.2';
+const VERSION='1.1.3';
 const REPO_URL='https://github.com/alberthsiao/qunxiong-zhulu';
 const KEY='qunxiong-zhulu-save-v1';
 const OKEY='qunxiong-zhulu-overrides-v1';
@@ -2228,12 +2228,16 @@ function openSaves(){
  let h=`<table class="ed"><tbody><tr><td>自動</td><td>${slotLabel(au)}</td><td class="dpacts">${au?`<button data-ld="auto">讀取</button>`:'<span class="hint">每月結束時自動存檔</span>'}</td></tr>`+SLOTS.map(i=>{const d=readSlot(i);return `<tr><td>欄位 ${i}</td><td>${slotLabel(d)}</td><td class="dpacts">${can?`<button data-sv="${i}">存入</button>`:''}${d?`<button data-ld="${i}">讀取</button><button data-del="${i}">刪除</button>`:''}</td></tr>`;}).join('')+`</tbody></table>`;
  h+=`<div id="cloud-box">${cloudHTML()}</div>`;
  h+=settingsHTML();
- h+=`<h3>匯出與匯入</h3><p class="hint">上方「欄位」的存檔只保存在這台裝置的瀏覽器裡。想換裝置或備份時，可以匯出成一段文字自行保存，再到別處貼上匯入。</p>
+ h+=`<h3>存到電腦</h3><p class="hint">把目前進度存成一個 .json 檔案放在你的電腦、手機或雲端硬碟裡，之後從檔案讀回。這是最可靠的備份方式，不受瀏覽器清除資料影響。</p>
+ <div class="dpacts">${can?'<button id="sv-file" class="primary">存成檔案</button>':''}<button id="sv-open">從檔案讀取</button><input type="file" id="sv-fin" accept=".json,application/json,text/plain" hidden></div>
+ <h3>匯出與匯入文字</h3><p class="hint">也可以匯出成一段文字自行保存（例如貼到備忘錄），再到別處貼上匯入。</p>
  <div class="dpacts">${can?'<button id="sv-exp">匯出目前進度</button>':''}<button id="sv-imp">匯入</button></div><textarea id="sv-txt" rows="4" placeholder="匯出的文字會出現在這裡；要匯入時，把文字貼在這裡再按「匯入」。"></textarea><p class="err" id="sv-err"></p>`;
  modal('存檔與讀檔',h,[{label:'關閉',primary:true}]);$('#modal .dlg').classList.add('wide');cloudRedraw();
 }
 $('#modal').addEventListener('click',e=>{
- const b=e.target.closest('[data-sv],[data-ld],[data-del],#sv-exp,#sv-imp');if(!b)return;
+ const b=e.target.closest('[data-sv],[data-ld],[data-del],#sv-exp,#sv-imp,#sv-file,#sv-open');if(!b)return;
+ if(b.id==='sv-file'){saveToFile();return;}
+ if(b.id==='sv-open'){$('#sv-fin').click();return;}
  try{
   if(b.dataset.sv){localStorage.setItem(slotKey(b.dataset.sv),dumpState());toast(`已存入欄位 ${b.dataset.sv}`);openSaves();return;}
   if(b.dataset.ld){const d=readSlot(b.dataset.ld==='auto'?'auto':+b.dataset.ld);if(d)loadState(d);return;}
@@ -2248,6 +2252,21 @@ $('#map').addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;
 function cityClick(n){if(ui.mode){if(validTargets().includes(n))openMarch(n);return;}ui.sel=n;render();}
 $('#b-end').onclick=endTurn;$('#b-save').onclick=openSaves;$('#b-edit').onclick=openEditor;$('#b-roster').onclick=openRoster;$('#b-items').onclick=openItems;$('#b-dip').onclick=openDip;$('#b-pol').onclick=openPolicy;$('#b-ach').onclick=openAch;$('#b-tl').onclick=openTimeline;$('#b-new').onclick=showStart;$('#b-cont').onclick=openSaves;
 
+
+/* 存成檔案：一般網頁用下載連結；Claude Artifact 環境下載被擋，改用平台的 downloads 能力 */
+function saveFileName(){const sc=SCENARIOS.find(x=>x.id===S.scn)||{title:''};return `群雄逐鹿-${sc.title}-${S.factions[S.player].name}-${S.year}年${S.month}月.json`;}
+async function saveToFile(){
+ if(!S||!S.player)return;const data=dumpState(),name=saveFileName();
+ try{
+  if(window.claude&&typeof window.claude.use==='function'){const dl=await window.claude.use('downloads');if(dl){await dl.save({filename:name,data});toast('已交給瀏覽器下載');return;}}
+  const blob=new Blob([data],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);toast('已下載存檔檔案');
+ }catch(e){toast('無法下載，請改用「匯出目前進度」複製文字');}
+}
+$('#modal').addEventListener('change',e=>{
+ if(e.target.id!=='sv-fin')return;const f=e.target.files&&e.target.files[0];if(!f)return;
+ const rd=new FileReader();rd.onload=()=>{try{const raw=String(rd.result).trim();const d=JSON.parse(raw.startsWith('{')?raw:decodeURIComponent(escape(atob(raw))));if(!d.officers||!d.cities)throw 0;loadState(d);}catch(err){$('#sv-err')&&($('#sv-err').textContent='這個檔案不是有效的存檔。');toast('讀取失敗');}};
+ rd.readAsText(f);e.target.value='';
+});
 
 /* ---------- 周邊諸國特性、渡海、朝貢 ---------- */
 const TRAITS={

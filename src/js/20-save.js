@@ -30,12 +30,16 @@ function openSaves(){
  let h=`<table class="ed"><tbody><tr><td>自動</td><td>${slotLabel(au)}</td><td class="dpacts">${au?`<button data-ld="auto">讀取</button>`:'<span class="hint">每月結束時自動存檔</span>'}</td></tr>`+SLOTS.map(i=>{const d=readSlot(i);return `<tr><td>欄位 ${i}</td><td>${slotLabel(d)}</td><td class="dpacts">${can?`<button data-sv="${i}">存入</button>`:''}${d?`<button data-ld="${i}">讀取</button><button data-del="${i}">刪除</button>`:''}</td></tr>`;}).join('')+`</tbody></table>`;
  h+=`<div id="cloud-box">${cloudHTML()}</div>`;
  h+=settingsHTML();
- h+=`<h3>匯出與匯入</h3><p class="hint">上方「欄位」的存檔只保存在這台裝置的瀏覽器裡。想換裝置或備份時，可以匯出成一段文字自行保存，再到別處貼上匯入。</p>
+ h+=`<h3>存到電腦</h3><p class="hint">把目前進度存成一個 .json 檔案放在你的電腦、手機或雲端硬碟裡，之後從檔案讀回。這是最可靠的備份方式，不受瀏覽器清除資料影響。</p>
+ <div class="dpacts">${can?'<button id="sv-file" class="primary">存成檔案</button>':''}<button id="sv-open">從檔案讀取</button><input type="file" id="sv-fin" accept=".json,application/json,text/plain" hidden></div>
+ <h3>匯出與匯入文字</h3><p class="hint">也可以匯出成一段文字自行保存（例如貼到備忘錄），再到別處貼上匯入。</p>
  <div class="dpacts">${can?'<button id="sv-exp">匯出目前進度</button>':''}<button id="sv-imp">匯入</button></div><textarea id="sv-txt" rows="4" placeholder="匯出的文字會出現在這裡；要匯入時，把文字貼在這裡再按「匯入」。"></textarea><p class="err" id="sv-err"></p>`;
  modal('存檔與讀檔',h,[{label:'關閉',primary:true}]);$('#modal .dlg').classList.add('wide');cloudRedraw();
 }
 $('#modal').addEventListener('click',e=>{
- const b=e.target.closest('[data-sv],[data-ld],[data-del],#sv-exp,#sv-imp');if(!b)return;
+ const b=e.target.closest('[data-sv],[data-ld],[data-del],#sv-exp,#sv-imp,#sv-file,#sv-open');if(!b)return;
+ if(b.id==='sv-file'){saveToFile();return;}
+ if(b.id==='sv-open'){$('#sv-fin').click();return;}
  try{
   if(b.dataset.sv){localStorage.setItem(slotKey(b.dataset.sv),dumpState());toast(`已存入欄位 ${b.dataset.sv}`);openSaves();return;}
   if(b.dataset.ld){const d=readSlot(b.dataset.ld==='auto'?'auto':+b.dataset.ld);if(d)loadState(d);return;}
@@ -50,3 +54,18 @@ $('#map').addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;
 function cityClick(n){if(ui.mode){if(validTargets().includes(n))openMarch(n);return;}ui.sel=n;render();}
 $('#b-end').onclick=endTurn;$('#b-save').onclick=openSaves;$('#b-edit').onclick=openEditor;$('#b-roster').onclick=openRoster;$('#b-items').onclick=openItems;$('#b-dip').onclick=openDip;$('#b-pol').onclick=openPolicy;$('#b-ach').onclick=openAch;$('#b-tl').onclick=openTimeline;$('#b-new').onclick=showStart;$('#b-cont').onclick=openSaves;
 
+
+/* 存成檔案：一般網頁用下載連結；Claude Artifact 環境下載被擋，改用平台的 downloads 能力 */
+function saveFileName(){const sc=SCENARIOS.find(x=>x.id===S.scn)||{title:''};return `群雄逐鹿-${sc.title}-${S.factions[S.player].name}-${S.year}年${S.month}月.json`;}
+async function saveToFile(){
+ if(!S||!S.player)return;const data=dumpState(),name=saveFileName();
+ try{
+  if(window.claude&&typeof window.claude.use==='function'){const dl=await window.claude.use('downloads');if(dl){await dl.save({filename:name,data});toast('已交給瀏覽器下載');return;}}
+  const blob=new Blob([data],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);toast('已下載存檔檔案');
+ }catch(e){toast('無法下載，請改用「匯出目前進度」複製文字');}
+}
+$('#modal').addEventListener('change',e=>{
+ if(e.target.id!=='sv-fin')return;const f=e.target.files&&e.target.files[0];if(!f)return;
+ const rd=new FileReader();rd.onload=()=>{try{const raw=String(rd.result).trim();const d=JSON.parse(raw.startsWith('{')?raw:decodeURIComponent(escape(atob(raw))));if(!d.officers||!d.cities)throw 0;loadState(d);}catch(err){$('#sv-err')&&($('#sv-err').textContent='這個檔案不是有效的存檔。');toast('讀取失敗');}};
+ rd.readAsText(f);e.target.value='';
+});

@@ -135,6 +135,7 @@
 - 曾犯的錯：「受威脅不出兵」用相鄰敵城兵力總和判定，結果幾乎每城都受威脅、AI 從此停止擴張。現在只看單一最強鄰敵，且受威脅只是減半而非歸零。
 
 ## 紀錄與分享（`41-record.js`）
+- 存成檔案／從檔案讀取（`20-save.js` 的 `saveToFile`、`#sv-fin`）：一般網頁用 Blob 下載連結；Claude Artifact 內改用 `claude.use('downloads')`，所以兩個 Artifact 發布時都要宣告 `downloads` 能力（帳號版：`{user:{scopes:['profile']},db:{},downloads:true}`；公開版：`{downloads:true}`）。
 - 存檔欄位 `SLOTS`（1～8）另有 `auto` 欄位，`endTurn` 尾端 `autoSave()`。`S.chron` 由 `log()` 同步記錄重要條目（上限 600），供 `lordBiography()` 生成本局列傳；`openShareCard()` 用 canvas 畫 1200×630 戰績卡（頭像 SVG 需加 xmlns 才能轉圖）。
 - 戰報回放：`runDay` 每日開始 `repSnap(B)` 存快照到 `B.rep`；戰鬥結束後「戰報回放」用 `repShow(i)` 覆寫 `B.units` 狀態重繪，`repExit` 還原。
 
