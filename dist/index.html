@@ -62,8 +62,8 @@ table.offs th{font-weight:600;color:var(--muted);text-align:right;padding:2px 4p
 table.offs td{text-align:right;padding:3px 4px;border-bottom:1px solid var(--line)}
 table.offs td:first-child,table.offs th:first-child{text-align:left}
 table.offs tr.done td{color:var(--muted)}
-.cmds{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
-.cmds button{padding:6px 4px;line-height:1.3}
+.cmds{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0 4px}
+.cmds button{padding:9px 4px;line-height:1.3;min-height:48px}
 .cmds small{display:block;color:var(--muted);font-size:11px}
 .cmds button.primary small{color:inherit;opacity:.75}
 .overlay{position:fixed;inset:0;background:rgba(20,22,18,.55);display:flex;align-items:center;justify-content:center;z-index:10;padding:12px}
@@ -433,6 +433,11 @@ table.offs th,table.ed th{border-bottom:1px solid var(--gold-lo)}
 @media(max-width:900px){.mapwrap::after{width:56px;height:56px;left:14px;bottom:62px}.start-title{font-size:44px}}
 @media (prefers-reduced-motion:reduce){button{transition:none}}
 
+/* 命令區：緊接城池數據，手機上固定在面板頂端可見 */
+.cmds{border:1px solid var(--gold-lo);padding:8px;background:var(--paper);box-shadow:inset 0 0 0 2px var(--panel),inset 0 0 0 3px rgba(184,145,47,.35)}
+.cmds button b{display:block}
+@media(max-width:900px){.cmds{grid-template-columns:repeat(3,1fr);gap:8px}.cmds button{min-height:56px;font-size:16px}}
+
 </style>
 </head>
 <body>
@@ -713,7 +718,7 @@ const MAPVW=1180,MAPVH=800;
 const LAND_NE='M800,0 L800,40 C830,72 868,98 905,84 C928,108 918,138 938,152 C926,188 942,218 968,238 C990,262 1016,250 1020,220 C1030,180 1022,140 1036,100 C1050,58 1075,28 1085,0 Z';
 const LAND_TW='M976,648 C996,652 1008,688 1002,724 C998,750 988,768 979,762 C966,748 957,702 961,676 C963,660 968,649 976,648 Z';
 const LAND_JP=['M1052,352 C1046,322 1078,298 1112,282 C1140,262 1160,236 1180,226 L1180,286 C1156,312 1130,340 1104,362 C1086,384 1058,380 1052,352 Z','M1028,388 C1040,372 1062,380 1060,400 C1056,422 1030,418 1028,388 Z'];
-const VERSION='1.1.3';
+const VERSION='1.1.4';
 const REPO_URL='https://github.com/alberthsiao/qunxiong-zhulu';
 const KEY='qunxiong-zhulu-save-v1';
 const OKEY='qunxiong-zhulu-overrides-v1';
@@ -1241,15 +1246,15 @@ function renderPanel(){
  if(own){
   const offs=officersIn(c.name,S.player),idle=offs.filter(o=>!o.done);
   h+=`<label class="autot"><input type="checkbox" id="autoc" ${c.auto?'checked':''}> 委任太守：月底由電腦代為執行本城內政</label>`;
-  h+=`<h3>武將</h3>`+offTable(offs,true);
   const fr=freeFound(c);
-  if(fr.length)h+=`<h3>可登用的在野人才</h3><p class="hint">${fr.map(o=>o.name+(o.city!==c.name?'（'+o.city+'）':'')).join('、')}</p>`;
   const adjOwn=ADJ[c.name].some(n=>S.cities[n].owner===S.player),adjEnemy=ADJ[c.name].some(n=>S.cities[n].owner!==S.player);
   const spyT=within2(c.name).filter(n=>S.cities[n].owner&&S.cities[n].owner!==S.player).length;
   const en={relief:c.food>=300&&(c.ppl??60)<100,spy:spyT>0,farm:c.gold>=60&&c.farm<c.farmMax,trade:c.gold>=60&&c.trade<c.tradeMax,def:c.gold>=60&&c.def<c.defMax,recruit:maxRecruit(c)>=500,train:c.train<100,gear:c.gold>=100,search:true,persuade:fr.length>0,move:adjOwn,attack:adjEnemy&&c.troops>=500};
   const sub={farm:'政治｜60 金',trade:'政治｜60 金',def:'統率｜60 金',recruit:'魅力',train:'統率',gear:'政治｜100 金起',search:'智力',persuade:'魅力',relief:'政治｜300 糧',spy:'智力',move:'武將與兵',attack:'最多三將'};
   h+=`<div class="cmds">`+Object.keys(CMDS).map(k=>`<button data-cmd="${k}" ${idle.length&&en[k]?'':'disabled'} ${k==='attack'?'class="primary"':''}>${CMDS[k]}<small>${sub[k]}</small></button>`).join('')+`</div>`;
   if(!idle.length&&offs.length)h+=`<p class="hint">本城武將本月皆已行動。</p>`;
+  h+=`<h3>武將</h3><p class="hint">尚可行動 ${idle.length}／${offs.length} 人。</p>`+offTable(offs,true);
+  if(fr.length)h+=`<h3>可登用的在野人才</h3><p class="hint">${fr.map(o=>o.name+(o.city!==c.name?'（'+o.city+'）':'')).join('、')}</p>`;
  }else{
   const offs=c.owner?officersIn(c.name,c.owner):[];
   if(vis)h+=`<h3>守將</h3>`+offTable(offs,false);

@@ -75,15 +75,15 @@ function renderPanel(){
  if(own){
   const offs=officersIn(c.name,S.player),idle=offs.filter(o=>!o.done);
   h+=`<label class="autot"><input type="checkbox" id="autoc" ${c.auto?'checked':''}> 委任太守：月底由電腦代為執行本城內政</label>`;
-  h+=`<h3>武將</h3>`+offTable(offs,true);
   const fr=freeFound(c);
-  if(fr.length)h+=`<h3>可登用的在野人才</h3><p class="hint">${fr.map(o=>o.name+(o.city!==c.name?'（'+o.city+'）':'')).join('、')}</p>`;
   const adjOwn=ADJ[c.name].some(n=>S.cities[n].owner===S.player),adjEnemy=ADJ[c.name].some(n=>S.cities[n].owner!==S.player);
   const spyT=within2(c.name).filter(n=>S.cities[n].owner&&S.cities[n].owner!==S.player).length;
   const en={relief:c.food>=300&&(c.ppl??60)<100,spy:spyT>0,farm:c.gold>=60&&c.farm<c.farmMax,trade:c.gold>=60&&c.trade<c.tradeMax,def:c.gold>=60&&c.def<c.defMax,recruit:maxRecruit(c)>=500,train:c.train<100,gear:c.gold>=100,search:true,persuade:fr.length>0,move:adjOwn,attack:adjEnemy&&c.troops>=500};
   const sub={farm:'政治｜60 金',trade:'政治｜60 金',def:'統率｜60 金',recruit:'魅力',train:'統率',gear:'政治｜100 金起',search:'智力',persuade:'魅力',relief:'政治｜300 糧',spy:'智力',move:'武將與兵',attack:'最多三將'};
   h+=`<div class="cmds">`+Object.keys(CMDS).map(k=>`<button data-cmd="${k}" ${idle.length&&en[k]?'':'disabled'} ${k==='attack'?'class="primary"':''}>${CMDS[k]}<small>${sub[k]}</small></button>`).join('')+`</div>`;
   if(!idle.length&&offs.length)h+=`<p class="hint">本城武將本月皆已行動。</p>`;
+  h+=`<h3>武將</h3><p class="hint">尚可行動 ${idle.length}／${offs.length} 人。</p>`+offTable(offs,true);
+  if(fr.length)h+=`<h3>可登用的在野人才</h3><p class="hint">${fr.map(o=>o.name+(o.city!==c.name?'（'+o.city+'）':'')).join('、')}</p>`;
  }else{
   const offs=c.owner?officersIn(c.name,c.owner):[];
   if(vis)h+=`<h3>守將</h3>`+offTable(offs,false);
