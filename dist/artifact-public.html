@@ -22,12 +22,13 @@ button:disabled{opacity:.35;cursor:not-allowed}
 button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--river);outline-offset:2px}
 main{display:grid;grid-template-columns:minmax(0,1fr) 370px;min-height:calc(100vh - 54px)}
 .mapwrap{padding:8px;overflow:auto;min-width:0;position:relative}svg#map,svg#bmap{touch-action:none;user-select:none}.zoomctl{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:4px;z-index:3}.zoomctl button{width:32px;height:32px;padding:0;font-size:18px;line-height:1;background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:3px}@media(hover:hover){.zoomctl{opacity:.55}.mapwrap:hover .zoomctl,.bmapwrap:hover .zoomctl{opacity:1}}
-svg#map{width:100%;height:auto;display:block;max-height:calc(100vh - 110px)}
+svg#map{width:auto;max-width:100%;height:auto;display:block;max-height:min(68vh,640px);margin:0 auto}
+.mapwrap.big svg#map{max-height:calc(100vh - 110px)}
 aside{background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;max-height:calc(100vh - 54px)}
 #panel{padding:14px 16px;flex:1;overflow:auto}
 #log{border-top:1px solid var(--line);padding:10px 16px;height:200px;overflow:auto;font-size:13px;color:var(--muted);flex:none}
 #log p{margin:0 0 3px}#log .good{color:var(--good)}#log .bad{color:var(--bad)}#log time{margin-right:6px;opacity:.7}
-@media(max-width:900px){main{grid-template-columns:1fr}aside{border-left:0;border-top:1px solid var(--line);max-height:none}svg#map{max-height:none}}
+@media(max-width:900px){main{grid-template-columns:1fr}aside{border-left:0;border-top:1px solid var(--line);max-height:none}svg#map{max-height:56vh}.mapwrap.big svg#map{max-height:none}}
 .legend{display:flex;flex-wrap:wrap;gap:2px 14px;font-size:13px;color:var(--muted);padding:4px 8px}
 .legend .gone{text-decoration:line-through;opacity:.5}
 .edge{stroke:var(--line);stroke-width:1.6;stroke-dasharray:4 4}.edge.sea{stroke:var(--river);stroke-dasharray:2 7;stroke-linecap:round}
@@ -388,7 +389,7 @@ header.top button.primary:not(:disabled):hover{background:linear-gradient(180deg
 h3{padding-left:16px}h3::before{width:9px;height:9px;top:.45em;transform:rotate(45deg);background:linear-gradient(135deg,var(--gold-hi),var(--gold-lo));border-radius:0}
 .statgrid div>*:last-child{color:var(--verm-ink)}
 svg#map{border:1px solid var(--gold-lo);box-shadow:inset 0 0 0 4px var(--paper),inset 0 0 0 5px var(--gold),inset 0 0 0 7px var(--paper),inset 0 0 0 8px rgba(184,145,47,.4),0 0 0 1px rgba(0,0,0,.15)}
-.mapwrap::after{content:'';position:absolute;left:26px;bottom:74px;width:92px;height:92px;background:var(--compass) no-repeat center/contain;opacity:.8;pointer-events:none}
+.mapwrap::after{content:'';position:absolute;left:26px;bottom:60px;width:92px;height:92px;background:var(--compass) no-repeat center/contain;opacity:.8;pointer-events:none}
 .city.sel .seal-r{stroke:var(--gold-hi);stroke-width:3.5;filter:drop-shadow(0 0 4px var(--gold))}
 .ring{stroke:var(--gold)}
 .terr{opacity:.2}
@@ -712,7 +713,7 @@ const MAPVW=1180,MAPVH=800;
 const LAND_NE='M800,0 L800,40 C830,72 868,98 905,84 C928,108 918,138 938,152 C926,188 942,218 968,238 C990,262 1016,250 1020,220 C1030,180 1022,140 1036,100 C1050,58 1075,28 1085,0 Z';
 const LAND_TW='M976,648 C996,652 1008,688 1002,724 C998,750 988,768 979,762 C966,748 957,702 961,676 C963,660 968,649 976,648 Z';
 const LAND_JP=['M1052,352 C1046,322 1078,298 1112,282 C1140,262 1160,236 1180,226 L1180,286 C1156,312 1130,340 1104,362 C1086,384 1058,380 1052,352 Z','M1028,388 C1040,372 1062,380 1060,400 C1056,422 1030,418 1028,388 Z'];
-const VERSION='1.1.4';
+const VERSION='1.1.5';
 const REPO_URL='https://github.com/alberthsiao/qunxiong-zhulu';
 const KEY='qunxiong-zhulu-save-v1';
 const OKEY='qunxiong-zhulu-overrides-v1';
@@ -1277,7 +1278,7 @@ function openCmd(kind,pre){
   const o=S.officers[+$('#m-off').value];let r=null;
   if(DEV[kind])r=doDev(kind,o,c);else if(kind==='train')r=doTrain(o,c);else if(kind==='gear')r=doGear($('#m-gk').value,o,c);else if(kind==='recruit')r=doRecruit(o,c,+$('#m-a').value);
   else if(kind==='search')r=doSearch(o,c,S.player);else if(kind==='relief')r=doRelief(o,c);else if(kind==='persuade')r=doPersuade(o,S.officers[+$('#m-tgt').value],S.player);
-  if(r)log(r.msg,r.cls);render();if((S.evq||[]).length)setTimeout(()=>showEvents(),0);}},{label:'取消'}]);
+  if(r)log(r.msg,r.cls);render();autoSaveSoon();if((S.evq||[]).length)setTimeout(()=>showEvents(),0);}},{label:'取消'}]);
  if(kind==='persuade'){const upd=()=>{const o=S.officers[+$('#m-off').value],t=S.officers[+$('#m-tgt').value];$('#m-pc').textContent=`成功率約 ${Math.round(persuadeChance(o,t,S.player)*100)}%。${t.city!==c.name?'對象在鄰近城池，遣使登用成功率略低。':''}武將與君主魅力越高越容易成功。`;};$('#m-off').onchange=upd;$('#m-tgt').onchange=upd;upd();}
  if(kind==='gear'){const sel=$('#m-gk');const ok=[...sel.options].find(x=>!x.disabled);if(ok)sel.value=ok.value;const upd=()=>{const k=sel.value,o=S.officers[+$('#m-off').value];$('#m-gd').textContent=`${GEAR[k].d}。${o.name}（${SN[GEAR[k].stat]} ${o[GEAR[k].stat]}）預計可造約 ${k==='ram'?gearYield(k,o)+' 輛':fmt(500+o.pol*8)}。`;};sel.onchange=upd;$('#m-off').onchange=upd;upd();}
  if(kind==='recruit'){const upd=()=>{const a=+$('#m-a').value;$('#m-av').textContent=fmt(a);$('#m-cost').textContent=`花費 ${Math.round(a*0.15)} 金。武將魅力越高，實際徵得人數略多；新兵會拉低訓練度。`;};$('#m-a').oninput=upd;upd();}
@@ -1318,7 +1319,7 @@ function openMarch(tn){
    openBattle(B,'a',()=>{if(B.win)ui.sel=t.name;processCaptives(()=>{render();checkEnd();});});
   }else{
    if(!offs.length&&n<=0){$('#m-err').textContent='請選擇武將或兵力。';return false;}
-   doMove(src,t,offs,n);log(`${offs.length?offs.map(o=>o.name).join('、')+'率':''}兵 ${fmt(n)} 自${src.name}移往${t.name}`);ui.mode=null;ui.sel=t.name;render();
+   doMove(src,t,offs,n);log(`${offs.length?offs.map(o=>o.name).join('、')+'率':''}兵 ${fmt(n)} 自${src.name}移往${t.name}`);ui.mode=null;ui.sel=t.name;render();autoSaveSoon();
   }
  }},{label:'取消',fn:()=>{ui.mode=null;render();}}]);
  const upd=()=>{const r=$('#m-t');if(atk){const ids=[...document.querySelectorAll('#m-body input[type=checkbox]:checked')].map(x=>S.officers[+x.value]);const cap=Math.min(src.troops,ids.reduce((a,o)=>a+capOf(o),0));r.max=cap;if(+r.value>cap)r.value=cap;}
@@ -1748,7 +1749,7 @@ $('#battle').addEventListener('click',e=>{
  if(b){
   if(b.id==='bt-skip'){FX.skip=true;$('#fxl')&&($('#fxl').innerHTML='');return;}
   if(b.id==='bt-fx'){FX.mode=FX.mode==='on'?'fast':FX.mode==='fast'?'off':'on';try{localStorage.setItem('qunxiong-fx',FX.mode);}catch(e){}b.textContent='動畫：'+FXN[FX.mode];return;}
-  if(b.id==='bt-end'){$('#battle').hidden=true;MUSIC.battle=false;syncWall(B);finishBattle(B);const d=BT.done;BT=null;FX.skip=false;render();d();return;}
+  if(b.id==='bt-end'){$('#battle').hidden=true;MUSIC.battle=false;setTimeout(autoSaveSoon,50);syncWall(B);finishBattle(B);const d=BT.done;BT=null;FX.skip=false;render();d();return;}
   if(BT.busy)return;
   FX.skip=false;
   if(b.id==='bt-endphase'){endPlayerPhase();return;}
@@ -2009,7 +2010,7 @@ $('#modal').addEventListener('click',e=>{const b=e.target.closest('[data-dp]');i
  if(k==='break'){breakPact(f);drawDip();return;}
  const env=S.officers[DP.env];if(!env)return;
  const arg=k==='gift'?DP.gift:k==='joint'?document.querySelector(`[data-jt="${f}"]`).value:null;
- const r=k==='demand'||k==='pay'?doTribute(env,f,k):doDip(env,f,k,arg);log(r.msg,r.cls);toast(r.msg);drawDip();});
+ const r=k==='demand'||k==='pay'?doTribute(env,f,k):doDip(env,f,k,arg);log(r.msg,r.cls);toast(r.msg);drawDip();autoSaveSoon();});
 
 /* ---------- 寶物 ---------- */
 function itemsOf(o){return (S&&S.items||[]).filter(i=>i.owner===o.id);}
@@ -2164,7 +2165,7 @@ function drawStart(){
  let has=hasAnySave();
  $('#b-cont').hidden=!has;
  if(!START.scn){
-  $('#st-intro').textContent='選擇劇本。';
+  const au=readSlot('auto');$('#st-intro').innerHTML=au&&!au.over?`選擇劇本開新局，或按右下角「讀取存檔」接續上次的 ${(SCENARIOS.find(x=>x.id===au.scn)||{title:''}).title}（${au.year} 年 ${au.month} 月）。`:'選擇劇本。';
   $('#fgrid').className='sgrid';
   $('#fgrid').innerHTML=SCENARIOS.map(sc=>`<button class="scard" data-s="${sc.id}"><span class="syear">${sc.year}</span><span><b>${sc.title}</b><small>${sc.desc}</small><small>${sc.factions.length} 個勢力：${sc.factions.map(f=>f[1]).join('、')}</small></span></button>`).join('');
   document.querySelectorAll('.scard').forEach(b=>b.onclick=()=>{START.scn=b.dataset.s;drawStart();});
@@ -3716,7 +3717,7 @@ function zoomApply(id){
  const z=ZOOM[id],svg=document.getElementById(id);if(!svg)return;
  z.s=clamp(z.s,1,4);const w=z.W/z.s,h=z.H/z.s;z.x=clamp(z.x,0,z.W-w);z.y=clamp(z.y,0,z.H-h);
  svg.setAttribute('viewBox',`${z.x.toFixed(1)} ${z.y.toFixed(1)} ${w.toFixed(1)} ${h.toFixed(1)}`);
- const wrap=svg.parentElement;if(wrap&&!wrap.querySelector('.zoomctl')){const d=document.createElement('div');d.className='zoomctl';d.innerHTML=`<button data-z="in" aria-label="放大">＋</button><button data-z="out" aria-label="縮小">－</button><button data-z="reset" aria-label="重設">⟲</button>`;d.addEventListener('click',e=>{const b=e.target.closest('[data-z]');if(!b)return;e.stopPropagation();const k=b.dataset.z;if(k==='reset'){z.s=1;z.x=0;z.y=0;}else zoomAt(id,k==='in'?1.4:1/1.4,null);zoomApply(id);});wrap.appendChild(d);}
+ const wrap=svg.parentElement;if(wrap&&!wrap.querySelector('.zoomctl')){const d=document.createElement('div');d.className='zoomctl';d.innerHTML=`<button data-z="in" aria-label="放大">＋</button><button data-z="out" aria-label="縮小">－</button><button data-z="reset" aria-label="重設">⟲</button>${id==='map'?'<button data-z="size" aria-label="切換地圖大小" title="切換地圖大小">⤢</button>':''}`;d.addEventListener('click',e=>{const b=e.target.closest('[data-z]');if(!b)return;e.stopPropagation();const k=b.dataset.z;if(k==='size'){const w=wrap.classList.toggle('big');PREF.set('mapbig',w?'on':'off');return;}if(k==='reset'){z.s=1;z.x=0;z.y=0;}else zoomAt(id,k==='in'?1.4:1/1.4,null);zoomApply(id);});wrap.appendChild(d);if(id==='map'&&PREF.get('mapbig','off')==='on')wrap.classList.add('big');}
 }
 function zoomAt(id,f,pt){
  const z=ZOOM[id];const ns=clamp(z.s*f,1,4);if(ns===z.s)return;
@@ -4137,7 +4138,13 @@ function tutRender(){
 
 /* ---------- 自動存檔、戰報回放、本局列傳、戰績卡 ---------- */
 const SLOTS=[1,2,3,4,5,6,7,8];
-function autoSave(){if(!S||!S.player||S.over||SIM.on)return;try{localStorage.setItem(slotKey('auto'),dumpState());}catch(e){}}
+let autoT=null;
+function autoSave(){if(!S||!S.player||S.over||SIM.on||BT)return;try{localStorage.setItem(slotKey('auto'),dumpState());}catch(e){}}
+/* 延遲合併：下命令後 800ms 內只存一次 */
+function autoSaveSoon(){clearTimeout(autoT);autoT=setTimeout(autoSave,800);}
+/* 切到背景、關閉分頁時也存一次 */
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')autoSave();});
+window.addEventListener('pagehide',autoSave);
 /* 本局大事記：log() 呼叫時同步記錄重要條目，不受 80 筆上限限制，用來生成列傳 */
 function chron(m,c){if(!S||!S.player)return;if(!(c==='good'||c==='bad'||/攻陷|滅亡|稱帝|同盟|歸順|出仕|繼承|大敗|遇害|病逝|託孤|受禪/.test(m)))return;S.chron=S.chron||[];S.chron.push([S.year,S.month,m]);if(S.chron.length>600)S.chron.shift();}
 /* 戰報回放：每日開始時記錄各隊位置與兵力 */
@@ -4326,6 +4333,9 @@ HIST.push(
    if(!offs.length||n<4000)return;offs.forEach(o=>o.city='襄平');src.troops-=n;const B=setupBattle(f,src,tgt,offs,n);autoResolve(B);finishBattle(B);log(`${offs[0].name}東征高句麗${B.win?'，攻破丸都':'，無功而返'}`);[f,'gogu'].forEach(x=>pev(x,'毌丘儉征高句麗',t));}});
 
 /* ---------- 啟動（必須是最後一個模組：前面各檔的 const 都要先完成初始化） ---------- */
-S=initState(null,'s200');render();showStart();cloudInit();
+S=initState(null,'s200');render();
+/* 開啟時自動接續上次進度（自動存檔）；沒有就進開局畫面。要開新局走「系統 → 重新開始」 */
+(function(){const au=readSlot('auto');if(au&&au.player&&!au.over&&FC[au.player]&&!BT){try{loadState(au);toast(`已接續上次進度：${eraStr()}`);return;}catch(e){console.error('接續進度失敗',e);}}showStart();})();
+cloudInit();
 
 </script>

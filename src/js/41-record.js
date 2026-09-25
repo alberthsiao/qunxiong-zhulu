@@ -1,6 +1,12 @@
 /* ---------- 自動存檔、戰報回放、本局列傳、戰績卡 ---------- */
 const SLOTS=[1,2,3,4,5,6,7,8];
-function autoSave(){if(!S||!S.player||S.over||SIM.on)return;try{localStorage.setItem(slotKey('auto'),dumpState());}catch(e){}}
+let autoT=null;
+function autoSave(){if(!S||!S.player||S.over||SIM.on||BT)return;try{localStorage.setItem(slotKey('auto'),dumpState());}catch(e){}}
+/* 延遲合併：下命令後 800ms 內只存一次 */
+function autoSaveSoon(){clearTimeout(autoT);autoT=setTimeout(autoSave,800);}
+/* 切到背景、關閉分頁時也存一次 */
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')autoSave();});
+window.addEventListener('pagehide',autoSave);
 /* 本局大事記：log() 呼叫時同步記錄重要條目，不受 80 筆上限限制，用來生成列傳 */
 function chron(m,c){if(!S||!S.player)return;if(!(c==='good'||c==='bad'||/攻陷|滅亡|稱帝|同盟|歸順|出仕|繼承|大敗|遇害|病逝|託孤|受禪/.test(m)))return;S.chron=S.chron||[];S.chron.push([S.year,S.month,m]);if(S.chron.length>600)S.chron.shift();}
 /* 戰報回放：每日開始時記錄各隊位置與兵力 */

@@ -91,4 +91,4 @@ $('#modal').addEventListener('click',e=>{const b=e.target.closest('[data-dp]');i
  if(k==='break'){breakPact(f);drawDip();return;}
  const env=S.officers[DP.env];if(!env)return;
  const arg=k==='gift'?DP.gift:k==='joint'?document.querySelector(`[data-jt="${f}"]`).value:null;
- const r=k==='demand'||k==='pay'?doTribute(env,f,k):doDip(env,f,k,arg);log(r.msg,r.cls);toast(r.msg);drawDip();});
+ const r=k==='demand'||k==='pay'?doTribute(env,f,k):doDip(env,f,k,arg);log(r.msg,r.cls);toast(r.msg);drawDip();autoSaveSoon();});

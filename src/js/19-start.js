@@ -5,7 +5,7 @@ function drawStart(){
  let has=hasAnySave();
  $('#b-cont').hidden=!has;
  if(!START.scn){
-  $('#st-intro').textContent='選擇劇本。';
+  const au=readSlot('auto');$('#st-intro').innerHTML=au&&!au.over?`選擇劇本開新局，或按右下角「讀取存檔」接續上次的 ${(SCENARIOS.find(x=>x.id===au.scn)||{title:''}).title}（${au.year} 年 ${au.month} 月）。`:'選擇劇本。';
   $('#fgrid').className='sgrid';
   $('#fgrid').innerHTML=SCENARIOS.map(sc=>`<button class="scard" data-s="${sc.id}"><span class="syear">${sc.year}</span><span><b>${sc.title}</b><small>${sc.desc}</small><small>${sc.factions.length} 個勢力：${sc.factions.map(f=>f[1]).join('、')}</small></span></button>`).join('');
   document.querySelectorAll('.scard').forEach(b=>b.onclick=()=>{START.scn=b.dataset.s;drawStart();});

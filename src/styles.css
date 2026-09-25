@@ -17,12 +17,13 @@ button:disabled{opacity:.35;cursor:not-allowed}
 button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--river);outline-offset:2px}
 main{display:grid;grid-template-columns:minmax(0,1fr) 370px;min-height:calc(100vh - 54px)}
 .mapwrap{padding:8px;overflow:auto;min-width:0;position:relative}svg#map,svg#bmap{touch-action:none;user-select:none}.zoomctl{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:4px;z-index:3}.zoomctl button{width:32px;height:32px;padding:0;font-size:18px;line-height:1;background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:3px}@media(hover:hover){.zoomctl{opacity:.55}.mapwrap:hover .zoomctl,.bmapwrap:hover .zoomctl{opacity:1}}
-svg#map{width:100%;height:auto;display:block;max-height:calc(100vh - 110px)}
+svg#map{width:auto;max-width:100%;height:auto;display:block;max-height:min(68vh,640px);margin:0 auto}
+.mapwrap.big svg#map{max-height:calc(100vh - 110px)}
 aside{background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;max-height:calc(100vh - 54px)}
 #panel{padding:14px 16px;flex:1;overflow:auto}
 #log{border-top:1px solid var(--line);padding:10px 16px;height:200px;overflow:auto;font-size:13px;color:var(--muted);flex:none}
 #log p{margin:0 0 3px}#log .good{color:var(--good)}#log .bad{color:var(--bad)}#log time{margin-right:6px;opacity:.7}
-@media(max-width:900px){main{grid-template-columns:1fr}aside{border-left:0;border-top:1px solid var(--line);max-height:none}svg#map{max-height:none}}
+@media(max-width:900px){main{grid-template-columns:1fr}aside{border-left:0;border-top:1px solid var(--line);max-height:none}svg#map{max-height:56vh}.mapwrap.big svg#map{max-height:none}}
 .legend{display:flex;flex-wrap:wrap;gap:2px 14px;font-size:13px;color:var(--muted);padding:4px 8px}
 .legend .gone{text-decoration:line-through;opacity:.5}
 .edge{stroke:var(--line);stroke-width:1.6;stroke-dasharray:4 4}.edge.sea{stroke:var(--river);stroke-dasharray:2 7;stroke-linecap:round}

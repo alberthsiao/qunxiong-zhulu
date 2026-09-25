@@ -141,7 +141,7 @@ $('#battle').addEventListener('click',e=>{
  if(b){
   if(b.id==='bt-skip'){FX.skip=true;$('#fxl')&&($('#fxl').innerHTML='');return;}
   if(b.id==='bt-fx'){FX.mode=FX.mode==='on'?'fast':FX.mode==='fast'?'off':'on';try{localStorage.setItem('qunxiong-fx',FX.mode);}catch(e){}b.textContent='動畫：'+FXN[FX.mode];return;}
-  if(b.id==='bt-end'){$('#battle').hidden=true;MUSIC.battle=false;syncWall(B);finishBattle(B);const d=BT.done;BT=null;FX.skip=false;render();d();return;}
+  if(b.id==='bt-end'){$('#battle').hidden=true;MUSIC.battle=false;setTimeout(autoSaveSoon,50);syncWall(B);finishBattle(B);const d=BT.done;BT=null;FX.skip=false;render();d();return;}
   if(BT.busy)return;
   FX.skip=false;
   if(b.id==='bt-endphase'){endPlayerPhase();return;}

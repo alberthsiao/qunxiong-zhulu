@@ -112,7 +112,7 @@ function openCmd(kind,pre){
   const o=S.officers[+$('#m-off').value];let r=null;
   if(DEV[kind])r=doDev(kind,o,c);else if(kind==='train')r=doTrain(o,c);else if(kind==='gear')r=doGear($('#m-gk').value,o,c);else if(kind==='recruit')r=doRecruit(o,c,+$('#m-a').value);
   else if(kind==='search')r=doSearch(o,c,S.player);else if(kind==='relief')r=doRelief(o,c);else if(kind==='persuade')r=doPersuade(o,S.officers[+$('#m-tgt').value],S.player);
-  if(r)log(r.msg,r.cls);render();if((S.evq||[]).length)setTimeout(()=>showEvents(),0);}},{label:'取消'}]);
+  if(r)log(r.msg,r.cls);render();autoSaveSoon();if((S.evq||[]).length)setTimeout(()=>showEvents(),0);}},{label:'取消'}]);
  if(kind==='persuade'){const upd=()=>{const o=S.officers[+$('#m-off').value],t=S.officers[+$('#m-tgt').value];$('#m-pc').textContent=`成功率約 ${Math.round(persuadeChance(o,t,S.player)*100)}%。${t.city!==c.name?'對象在鄰近城池，遣使登用成功率略低。':''}武將與君主魅力越高越容易成功。`;};$('#m-off').onchange=upd;$('#m-tgt').onchange=upd;upd();}
  if(kind==='gear'){const sel=$('#m-gk');const ok=[...sel.options].find(x=>!x.disabled);if(ok)sel.value=ok.value;const upd=()=>{const k=sel.value,o=S.officers[+$('#m-off').value];$('#m-gd').textContent=`${GEAR[k].d}。${o.name}（${SN[GEAR[k].stat]} ${o[GEAR[k].stat]}）預計可造約 ${k==='ram'?gearYield(k,o)+' 輛':fmt(500+o.pol*8)}。`;};sel.onchange=upd;$('#m-off').onchange=upd;upd();}
  if(kind==='recruit'){const upd=()=>{const a=+$('#m-a').value;$('#m-av').textContent=fmt(a);$('#m-cost').textContent=`花費 ${Math.round(a*0.15)} 金。武將魅力越高，實際徵得人數略多；新兵會拉低訓練度。`;};$('#m-a').oninput=upd;upd();}
@@ -153,7 +153,7 @@ function openMarch(tn){
    openBattle(B,'a',()=>{if(B.win)ui.sel=t.name;processCaptives(()=>{render();checkEnd();});});
   }else{
    if(!offs.length&&n<=0){$('#m-err').textContent='請選擇武將或兵力。';return false;}
-   doMove(src,t,offs,n);log(`${offs.length?offs.map(o=>o.name).join('、')+'率':''}兵 ${fmt(n)} 自${src.name}移往${t.name}`);ui.mode=null;ui.sel=t.name;render();
+   doMove(src,t,offs,n);log(`${offs.length?offs.map(o=>o.name).join('、')+'率':''}兵 ${fmt(n)} 自${src.name}移往${t.name}`);ui.mode=null;ui.sel=t.name;render();autoSaveSoon();
   }
  }},{label:'取消',fn:()=>{ui.mode=null;render();}}]);
  const upd=()=>{const r=$('#m-t');if(atk){const ids=[...document.querySelectorAll('#m-body input[type=checkbox]:checked')].map(x=>S.officers[+x.value]);const cap=Math.min(src.troops,ids.reduce((a,o)=>a+capOf(o),0));r.max=cap;if(+r.value>cap)r.value=cap;}

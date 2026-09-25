@@ -4,7 +4,7 @@ function zoomApply(id){
  const z=ZOOM[id],svg=document.getElementById(id);if(!svg)return;
  z.s=clamp(z.s,1,4);const w=z.W/z.s,h=z.H/z.s;z.x=clamp(z.x,0,z.W-w);z.y=clamp(z.y,0,z.H-h);
  svg.setAttribute('viewBox',`${z.x.toFixed(1)} ${z.y.toFixed(1)} ${w.toFixed(1)} ${h.toFixed(1)}`);
- const wrap=svg.parentElement;if(wrap&&!wrap.querySelector('.zoomctl')){const d=document.createElement('div');d.className='zoomctl';d.innerHTML=`<button data-z="in" aria-label="放大">＋</button><button data-z="out" aria-label="縮小">－</button><button data-z="reset" aria-label="重設">⟲</button>`;d.addEventListener('click',e=>{const b=e.target.closest('[data-z]');if(!b)return;e.stopPropagation();const k=b.dataset.z;if(k==='reset'){z.s=1;z.x=0;z.y=0;}else zoomAt(id,k==='in'?1.4:1/1.4,null);zoomApply(id);});wrap.appendChild(d);}
+ const wrap=svg.parentElement;if(wrap&&!wrap.querySelector('.zoomctl')){const d=document.createElement('div');d.className='zoomctl';d.innerHTML=`<button data-z="in" aria-label="放大">＋</button><button data-z="out" aria-label="縮小">－</button><button data-z="reset" aria-label="重設">⟲</button>${id==='map'?'<button data-z="size" aria-label="切換地圖大小" title="切換地圖大小">⤢</button>':''}`;d.addEventListener('click',e=>{const b=e.target.closest('[data-z]');if(!b)return;e.stopPropagation();const k=b.dataset.z;if(k==='size'){const w=wrap.classList.toggle('big');PREF.set('mapbig',w?'on':'off');return;}if(k==='reset'){z.s=1;z.x=0;z.y=0;}else zoomAt(id,k==='in'?1.4:1/1.4,null);zoomApply(id);});wrap.appendChild(d);if(id==='map'&&PREF.get('mapbig','off')==='on')wrap.classList.add('big');}
 }
 function zoomAt(id,f,pt){
  const z=ZOOM[id];const ns=clamp(z.s*f,1,4);if(ns===z.s)return;

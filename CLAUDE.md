@@ -136,7 +136,8 @@
 
 ## 紀錄與分享（`41-record.js`）
 - 存成檔案／從檔案讀取（`20-save.js` 的 `saveToFile`、`#sv-fin`）：一般網頁用 Blob 下載連結；Claude Artifact 內改用 `claude.use('downloads')`，所以兩個 Artifact 發布時都要宣告 `downloads` 能力（帳號版：`{user:{scopes:['profile']},db:{},downloads:true}`；公開版：`{downloads:true}`）。
-- 存檔欄位 `SLOTS`（1～8）另有 `auto` 欄位，`endTurn` 尾端 `autoSave()`。`S.chron` 由 `log()` 同步記錄重要條目（上限 600），供 `lordBiography()` 生成本局列傳；`openShareCard()` 用 canvas 畫 1200×630 戰績卡（頭像 SVG 需加 xmlns 才能轉圖）。
+- 存檔欄位 `SLOTS`（1～8）另有 `auto` 欄位。`autoSave()` 在月底、下命令後（`autoSaveSoon` 800ms 合併）、戰鬥結束、外交、移動、分頁切到背景與關閉時執行。`99-boot.js` 開啟時若有可用的自動存檔就直接 `loadState` 接續，否則才進開局畫面；開新局走「系統 → 重新開始」。
+- 大地圖預設 `max-height:min(68vh,640px)`，縮放鈕的「⤢」切換 `.mapwrap.big`（偏好存 `mapbig`）。`S.chron` 由 `log()` 同步記錄重要條目（上限 600），供 `lordBiography()` 生成本局列傳；`openShareCard()` 用 canvas 畫 1200×630 戰績卡（頭像 SVG 需加 xmlns 才能轉圖）。
 - 戰報回放：`runDay` 每日開始 `repSnap(B)` 存快照到 `B.rep`；戰鬥結束後「戰報回放」用 `repShow(i)` 覆寫 `B.units` 狀態重繪，`repExit` 還原。
 
 ## 劇本（共七個）
