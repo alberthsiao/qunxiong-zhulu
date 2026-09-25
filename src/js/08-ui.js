@@ -93,7 +93,7 @@ function renderPanel(){
  const ac=p.querySelector('#autoc');if(ac)ac.onchange=()=>{c.auto=ac.checked;log(`${c.name}${c.auto?'委任太守代管內政':'收回委任，改為親自下令'}`);render();};
  p.querySelectorAll('[data-cmd]').forEach(b=>b.onclick=()=>{const k=b.dataset.cmd;if(k==='move'||k==='attack'){ui.mode=k;ui.src=c.name;render();}else openCmd(k);});
 }
-function renderLog(){$('#log').innerHTML=S.log.slice(0,40).map(l=>`<p class="${l.c}"><time>${l.t}</time>${l.m}</p>`).join('');}
+function renderLog(){renderIntel();}
 function render(){renderTop();renderMap();renderPanel();renderLog();tutRender();}
 
 function openCmd(kind,pre){

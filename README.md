@@ -64,6 +64,7 @@ src/
     40-tutorial.js      新手引導
     41-record.js        自動存檔、戰報回放、本局列傳、戰績卡
     42-content.js       黃巾人物誌、演義回目、周邊寶物與事件
+    43-intel.js         情報台：日誌／軍情／大事
     99-boot.js          啟動，必須最後載入
 build.mjs               合併腳本
 tests/sim.cjs           無頭模擬測試

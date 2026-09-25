@@ -26,7 +26,9 @@ svg#map{width:auto;max-width:100%;height:auto;display:block;max-height:min(68vh,
 .mapwrap.big svg#map{max-height:calc(100vh - 110px)}
 aside{background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;max-height:calc(100vh - 54px)}
 #panel{padding:14px 16px;flex:1;overflow:auto}
-#log{border-top:1px solid var(--line);padding:10px 16px;height:200px;overflow:auto;font-size:13px;color:var(--muted);flex:none}
+#log{border-top:1px solid var(--line);padding:0;height:230px;overflow:hidden;font-size:13px;color:var(--muted);flex:none;display:flex;flex-direction:column}#log.big{height:min(60vh,520px)}
+.ihd{display:flex;align-items:center;gap:4px;padding:6px 10px;border-bottom:1px solid var(--line);flex:none}.ihd b{margin-right:8px;color:var(--ink);letter-spacing:.08em}.ihd button{padding:2px 10px;font-size:13px;border-color:transparent}.ihd button.on{border-color:var(--ink);background:var(--ink);color:var(--panel)}
+.ibody{padding:8px 14px;overflow:auto;flex:1}.ibody h4{margin:6px 0 2px;font-size:12px;letter-spacing:.1em;color:var(--ink)}.ibody p{margin:0 0 3px}.ibody .bad{color:var(--bad)}.ibody .good{color:var(--good)}.ibody time{margin-right:6px;opacity:.7}
 #log p{margin:0 0 3px}#log .good{color:var(--good)}#log .bad{color:var(--bad)}#log time{margin-right:6px;opacity:.7}
 @media(max-width:900px){main{grid-template-columns:1fr}aside{border-left:0;border-top:1px solid var(--line);max-height:none}svg#map{max-height:56vh}.mapwrap.big svg#map{max-height:none}}
 .legend{display:flex;flex-wrap:wrap;gap:2px 14px;font-size:13px;color:var(--muted);padding:4px 8px}
@@ -423,7 +425,7 @@ svg#bmap{border:1px solid var(--gold-lo);box-shadow:inset 0 0 0 3px var(--paper)
 .tag{background:linear-gradient(180deg,#C9412F,#8E2A22)}
 .ach.on{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold-hi)}.ach.on b{color:var(--verm-ink)}
 .pol.on{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
-#log{border-top:2px solid var(--gold-lo)}#log time{color:var(--gold-lo)}
+#log{border-top:2px solid var(--gold-lo)}.ibody time{color:var(--gold-lo)}.ihd{background:linear-gradient(180deg,var(--lac),var(--lac2));border-bottom:1px solid var(--gold)}.ihd b{color:var(--gold-hi)}.ihd button{color:var(--ivory)}.ihd button.on{background:var(--gold);color:var(--lac2);border-color:var(--gold-hi)}.ihd button:not(:disabled):hover{background:var(--gold);color:var(--lac2)}
 /* 表格標頭金線 */
 table.offs th,table.ed th{border-bottom:1px solid var(--gold-lo)}
 @media(max-width:900px){.mapwrap::after{width:56px;height:56px;left:14px;bottom:62px}.start-title{font-size:44px}}
@@ -713,7 +715,7 @@ const MAPVW=1180,MAPVH=800;
 const LAND_NE='M800,0 L800,40 C830,72 868,98 905,84 C928,108 918,138 938,152 C926,188 942,218 968,238 C990,262 1016,250 1020,220 C1030,180 1022,140 1036,100 C1050,58 1075,28 1085,0 Z';
 const LAND_TW='M976,648 C996,652 1008,688 1002,724 C998,750 988,768 979,762 C966,748 957,702 961,676 C963,660 968,649 976,648 Z';
 const LAND_JP=['M1052,352 C1046,322 1078,298 1112,282 C1140,262 1160,236 1180,226 L1180,286 C1156,312 1130,340 1104,362 C1086,384 1058,380 1052,352 Z','M1028,388 C1040,372 1062,380 1060,400 C1056,422 1030,418 1028,388 Z'];
-const VERSION='1.1.5';
+const VERSION='1.1.6';
 const REPO_URL='https://github.com/alberthsiao/qunxiong-zhulu';
 const KEY='qunxiong-zhulu-save-v1';
 const OKEY='qunxiong-zhulu-overrides-v1';
@@ -1259,7 +1261,7 @@ function renderPanel(){
  const ac=p.querySelector('#autoc');if(ac)ac.onchange=()=>{c.auto=ac.checked;log(`${c.name}${c.auto?'委任太守代管內政':'收回委任，改為親自下令'}`);render();};
  p.querySelectorAll('[data-cmd]').forEach(b=>b.onclick=()=>{const k=b.dataset.cmd;if(k==='move'||k==='attack'){ui.mode=k;ui.src=c.name;render();}else openCmd(k);});
 }
-function renderLog(){$('#log').innerHTML=S.log.slice(0,40).map(l=>`<p class="${l.c}"><time>${l.t}</time>${l.m}</p>`).join('');}
+function renderLog(){renderIntel();}
 function render(){renderTop();renderMap();renderPanel();renderLog();tutRender();}
 
 function openCmd(kind,pre){
@@ -4331,6 +4333,40 @@ HIST.push(
   run:({f})=>{const t=hz('正始五年（244），幽州刺史毌丘儉率步騎萬人自玄菟出擊高句麗，東川王迎戰於沸流水，大敗，毌丘儉攻破丸都城，「屠句驪所都，斬獲首虜以千數」。東川王逃入沃沮，得密友、紐由死戰而免。');
    const src=S.cities['襄平'],tgt=S.cities['丸都'];const offs=[inFac('毌丘儉',f),inFac('王頎',f),inFac('田豫',f),inFac('張特',f)].filter(Boolean).slice(0,3);const n=Math.min(src.troops-2000,offs.reduce((a,o)=>a+capOf(o),0),15000);
    if(!offs.length||n<4000)return;offs.forEach(o=>o.city='襄平');src.troops-=n;const B=setupBattle(f,src,tgt,offs,n);autoResolve(B);finishBattle(B);log(`${offs[0].name}東征高句麗${B.win?'，攻破丸都':'，無功而返'}`);[f,'gogu'].forEach(x=>pev(x,'毌丘儉征高句麗',t));}});
+
+/* ---------- 情報台：側欄底部的日誌區改為三個分頁（日誌／軍情／大事），可展開 ---------- */
+const INTEL={tab:'log',big:false};
+function intelLog(){return S.log.slice(0,40).map(l=>`<p class="${l.c}"><time>${l.t}</time>${l.m}</p>`).join('')||'<p class="hint">尚無日誌。</p>';}
+function intelMil(){
+ if(!S.player||!S.factions[S.player].alive)return '<p class="hint">—</p>';
+ const f=S.player,out=[];
+ const front=citiesOf(f).filter(c=>isFront(c,f));
+ const rows=front.map(c=>{const foes=ADJ[c.name].map(n=>S.cities[n]).filter(t=>t.owner&&t.owner!==f&&!friendly(f,t.owner));const mx=foes.reduce((a,t)=>Math.max(a,t.troops),0);const th=mx>c.troops*1.2;
+  return{c,foes,mx,th};}).sort((a,b)=>(b.mx/Math.max(1,b.c.troops))-(a.mx/Math.max(1,a.c.troops)));
+ out.push('<h4>前線</h4>');
+ if(!rows.length)out.push('<p class="hint">沒有與敵接壤的城池。</p>');
+ rows.forEach(({c,foes,mx,th})=>{out.push(`<p class="${th?'bad':''}"><b>${c.name}</b>　守兵 ${fmt(c.troops)}　${foes.map(t=>`${t.name}（${fname(t.owner)}${visible(t.name)?' '+wan(t.troops):' ?'}）`).join('、')}${th?'　⚠ 敵勢過強':''}</p>`);});
+ if(S.incoming&&S.incoming.length)out.push(`<p class="bad">本月來襲：${S.incoming.map(it=>`${fname(it.f)}攻${it.t}（${wan(it.n)}）`).join('、')}</p>`);
+ const warn=[];citiesOf(f).forEach(c=>{if(c.food<c.troops/40*3)warn.push(`${c.name}糧僅夠 ${Math.floor(c.food/Math.max(1,c.troops/40))} 個月`);if((c.ppl??60)<35)warn.push(`${c.name}民忠 ${Math.round(c.ppl)}，有暴動之虞`);if(c.gold<100)warn.push(`${c.name}金不足 100`);});
+ const low=S.officers.filter(o=>o.fac===f&&!isLord(o)&&o.loy<70).sort((a,b)=>a.loy-b.loy).slice(0,6);
+ if(low.length)warn.push(`忠誠偏低：${low.map(o=>`${o.name} ${o.loy}`).join('、')}`);
+ out.push('<h4>警訊</h4>'+(warn.length?warn.map(w=>`<p class="bad">${w}</p>`).join(''):'<p class="hint">內政無虞。</p>'));
+ const dip=Object.values(S.factions).filter(x=>x.alive&&x.id!==f).map(x=>{const r=rel(f,x.id);const st=r.ally?'同盟':r.truce>S.turn?`停戰 ${r.truce-S.turn} 月`:borders(f,x.id)?'接壤':'';return st?`${x.name} ${st}（${r.trust}）`:null;}).filter(Boolean);
+ out.push('<h4>外交</h4><p>'+(dip.join('、')||'—')+'</p>');
+ const h=hegemon();if(h)out.push(`<p class="hint">霸主：${S.factions[h].name}（${citiesOf(h).length} 城）${h===f?'，諸侯可能合縱抗我':''}</p>`);
+ const intel=Object.entries(S.intel||{}).filter(([n,t])=>t>S.turn).map(([n,t])=>`${n}（${t-S.turn} 月）`);
+ if(intel.length)out.push(`<p class="hint">偵察情報有效：${intel.join('、')}</p>`);
+ return out.join('');
+}
+function intelChron(){const ch=(S.chron||[]).slice(-60).reverse();return ch.length?ch.map(([y,m,t])=>`<p><time>${y}年${m}月</time>${t}</p>`).join(''):'<p class="hint">尚無大事。</p>';}
+function renderIntel(){
+ const box=$('#log');if(!box)return;
+ const tabs=[['log','日誌'],['mil','軍情'],['chron','大事']];
+ const inc=S.incoming&&S.incoming.length;
+ box.className='intel'+(INTEL.big?' big':'');
+ box.innerHTML=`<div class="ihd"><b>情報台</b>${tabs.map(([k,n])=>`<button data-it="${k}" class="${INTEL.tab===k?'on':''}">${n}${k==='mil'&&inc?' ●':''}</button>`).join('')}<span class="spacer"></span><button data-it="size" aria-label="展開">${INTEL.big?'▾':'▴'}</button></div><div class="ibody">${INTEL.tab==='log'?intelLog():INTEL.tab==='mil'?intelMil():intelChron()}</div>`;
+}
+$('#log').addEventListener('click',e=>{const b=e.target.closest('[data-it]');if(!b)return;if(b.dataset.it==='size')INTEL.big=!INTEL.big;else INTEL.tab=b.dataset.it;renderIntel();});
 
 /* ---------- 啟動（必須是最後一個模組：前面各檔的 const 都要先完成初始化） ---------- */
 S=initState(null,'s200');render();

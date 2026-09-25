@@ -21,7 +21,9 @@ svg#map{width:auto;max-width:100%;height:auto;display:block;max-height:min(68vh,
 .mapwrap.big svg#map{max-height:calc(100vh - 110px)}
 aside{background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;max-height:calc(100vh - 54px)}
 #panel{padding:14px 16px;flex:1;overflow:auto}
-#log{border-top:1px solid var(--line);padding:10px 16px;height:200px;overflow:auto;font-size:13px;color:var(--muted);flex:none}
+#log{border-top:1px solid var(--line);padding:0;height:230px;overflow:hidden;font-size:13px;color:var(--muted);flex:none;display:flex;flex-direction:column}#log.big{height:min(60vh,520px)}
+.ihd{display:flex;align-items:center;gap:4px;padding:6px 10px;border-bottom:1px solid var(--line);flex:none}.ihd b{margin-right:8px;color:var(--ink);letter-spacing:.08em}.ihd button{padding:2px 10px;font-size:13px;border-color:transparent}.ihd button.on{border-color:var(--ink);background:var(--ink);color:var(--panel)}
+.ibody{padding:8px 14px;overflow:auto;flex:1}.ibody h4{margin:6px 0 2px;font-size:12px;letter-spacing:.1em;color:var(--ink)}.ibody p{margin:0 0 3px}.ibody .bad{color:var(--bad)}.ibody .good{color:var(--good)}.ibody time{margin-right:6px;opacity:.7}
 #log p{margin:0 0 3px}#log .good{color:var(--good)}#log .bad{color:var(--bad)}#log time{margin-right:6px;opacity:.7}
 @media(max-width:900px){main{grid-template-columns:1fr}aside{border-left:0;border-top:1px solid var(--line);max-height:none}svg#map{max-height:56vh}.mapwrap.big svg#map{max-height:none}}
 .legend{display:flex;flex-wrap:wrap;gap:2px 14px;font-size:13px;color:var(--muted);padding:4px 8px}
